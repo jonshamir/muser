@@ -6,7 +6,8 @@ const animate = require("@jam3/gsap-promise");
 const PreactTransitionGroup = require("preact-transition-group");
 
 // Audio
-var createPlayer = require("web-audio-player");
+const createPlayer = require("web-audio-player");
+const createAnalyser = require("web-audio-analyser");
 
 // DOM Sections
 const Landing = require("../sections/Landing/Landing");
@@ -17,8 +18,8 @@ const Preloader = require("../sections/Preloader/Preloader");
 const WebGLCanvas = require("../components/WebGLCanvas/WebGLCanvas");
 
 // WebGL scenes
-const Honeycomb = require("../webgl/scene/Honeycomb");
-// const Visualizer = require("../webgl/scene/Visualizer");
+// const Honeycomb = require("../webgl/scene/Honeycomb");
+const Visualizer = require("../webgl/scene/Visualizer");
 
 const { assets, webgl } = require("../context");
 
@@ -74,12 +75,21 @@ class App extends BaseComponent {
       url: "assets/music/hotel-california.mp3",
       title: "Hotel California",
     };
-    const audio = createPlayer(song.url);
-    audio.on("load", () => {
+    const player = createPlayer(song.url);
+
+    const audioUtil = createAnalyser(player.node, player.context, {
+      stereo: false,
+    });
+
+    player.on("load", () => {
       console.log("Audio loaded...");
-      audio.node.connect(audio.context.destination);
+      player.node.connect(player.context.destination);
       this.setState({
-        nowPlaying: audio,
+        nowPlaying: {
+          title: "Hotel California",
+          audio: player,
+          audioUtil: audioUtil,
+        },
       });
     });
   }
@@ -97,7 +107,7 @@ class App extends BaseComponent {
       }, this.props.fakePreloadTime);
 
       // Add any "WebGL components" here...
-      webgl.scene.add(new Honeycomb());
+      webgl.scene.add(new Visualizer());
     });
   }
 
@@ -106,8 +116,8 @@ class App extends BaseComponent {
   };
 
   handleToggleAudio = () => {
-    if (this.state.isPlaying) this.state.nowPlaying.pause();
-    else this.state.nowPlaying.play();
+    if (this.state.isPlaying) this.state.nowPlaying.audio.pause();
+    else this.state.nowPlaying.audio.play();
 
     this.setState({
       isPlaying: !this.state.isPlaying,
