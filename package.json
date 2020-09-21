@@ -31,6 +31,7 @@
     "three": "^0.89.0",
     "touches": "^1.2.2",
     "tweenr": "^2.2.1",
+    "web-audio-player": "^1.3.3",
     "xhr": "^2.4.1"
   },
   "semistandard": {
@@ -44,6 +45,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
@@ -71,7 +73,7 @@
   "scripts": {
     "component": "node tools/component.js",
     "section": "node tools/component.js --section",
-    "start": "cross-env NODE_ENV=development node tools/bundler.js",
+    "start": "NODE_ENV=development node tools/bundler.js",
     "bundle:js": "node tools/bundler.js | uglifyjs -m -c warnings=false > app/bundle.js",
     "bundle:css": "node tools/style.js",
     "bundle": "cross-env NODE_ENV=production npm-run-all bundle:js bundle:css",

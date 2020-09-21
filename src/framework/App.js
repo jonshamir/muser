@@ -5,6 +5,9 @@ const classnames = require("classnames");
 const animate = require("@jam3/gsap-promise");
 const PreactTransitionGroup = require("preact-transition-group");
 
+// Audio
+var createPlayer = require("web-audio-player");
+
 // DOM Sections
 const Landing = require("../sections/Landing/Landing");
 const Muser = require("../sections/Muser/Muser");
@@ -28,6 +31,7 @@ class App extends BaseComponent {
       isAltMaterial: false,
       section: "Preloader",
       isPlaying: false,
+      nowPlaying: null,
     };
   }
 
@@ -65,16 +69,24 @@ class App extends BaseComponent {
   }
 
   loadWebGL() {
+    // Load audio
+    const mp3Key = assets.queue({
+      url: "assets/music/hotel-california.mp3",
+    });
+
     // Preload any queued assets
     assets.loadQueued(() => {
       // Do some fake delay for demo purposes
       setTimeout(() => {
-        // Once loading is complete, swap to Landing section and ensure WebGL displays
-        this.setState({ section: "Muser", isLoaded: true });
+        // Once loading is complete, swap to Muser section and ensure WebGL displays
+        this.setState({
+          section: "Muser",
+          isLoaded: true,
+          nowPlaying: 1,
+        });
       }, this.props.fakePreloadTime);
 
       // Add any "WebGL components" here...
-      // webgl.scene.add(new SpinningBox());
       webgl.scene.add(new Honeycomb());
     });
   }
