@@ -60,6 +60,7 @@ class App extends BaseComponent {
     webgl.canvas.addEventListener("touchstart", this.handlePreventDefault);
     webgl.canvas.addEventListener("mousedown", this.handlePreventDefault);
 
+    this.loadAudio();
     this.loadWebGL();
   }
 
@@ -68,12 +69,22 @@ class App extends BaseComponent {
     webgl.canvas.removeEventListener("mousedown", this.handlePreventDefault);
   }
 
-  loadWebGL() {
-    // Load audio
-    const mp3Key = assets.queue({
+  loadAudio() {
+    const song = {
       url: "assets/music/hotel-california.mp3",
+      title: "Hotel California",
+    };
+    const audio = createPlayer(song.url);
+    audio.on("load", () => {
+      console.log("Audio loaded...");
+      audio.node.connect(audio.context.destination);
+      this.setState({
+        nowPlaying: audio,
+      });
     });
+  }
 
+  loadWebGL() {
     // Preload any queued assets
     assets.loadQueued(() => {
       // Do some fake delay for demo purposes
@@ -82,7 +93,6 @@ class App extends BaseComponent {
         this.setState({
           section: "Muser",
           isLoaded: true,
-          nowPlaying: 1,
         });
       }, this.props.fakePreloadTime);
 
@@ -93,6 +103,15 @@ class App extends BaseComponent {
 
   handelMaterialSwap = () => {
     this.setState({ isAltMaterial: !this.state.isAltMaterial });
+  };
+
+  handleToggleAudio = () => {
+    if (this.state.isPlaying) this.state.nowPlaying.pause();
+    else this.state.nowPlaying.play();
+
+    this.setState({
+      isPlaying: !this.state.isPlaying,
+    });
   };
 
   getContent(section) {
@@ -108,7 +127,13 @@ class App extends BaseComponent {
           <Landing key="Landing" onMaterialSwap={this.handelMaterialSwap} />
         );
       case "Muser":
-        return <Muser key="Muser" onMaterialSwap={this.handelMaterialSwap} />;
+        return (
+          <Muser
+            key="Muser"
+            onTogglePlay={this.handleToggleAudio}
+            isPlaying={this.state.isPlaying}
+          />
+        );
     }
   }
 

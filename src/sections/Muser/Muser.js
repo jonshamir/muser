@@ -43,12 +43,12 @@ class Muser extends BaseComponent {
           Muser
         </Header>
         <MaterialButton
-          onClick={this.props.onMaterialSwap}
+          onClick={this.props.onTogglePlay}
           ref={(c) => {
             this.button = c;
           }}
         >
-          Click to swap material
+          {this.props.isPlaying ? "pause" : "play"}
         </MaterialButton>
       </div>
     );
@@ -56,7 +56,7 @@ class Muser extends BaseComponent {
 }
 
 Muser.defaultProps = {
-  onMaterialSwap: () => {},
+  onPlay: () => {},
 };
 
 module.exports = Muser;
