@@ -1,0 +1,15 @@
+{
+  "presets": [
+    [
+      "babel-preset-env", {
+        "useBuiltIns": "usage"
+      }
+    ]
+  ],
+  "ignore": "src/vendor/*.js",
+  "plugins": [
+    [ "transform-react-jsx", { "pragma": "h" } ],
+    "babel-plugin-transform-object-rest-spread",
+    "babel-plugin-transform-class-properties"
+  ]
+}
