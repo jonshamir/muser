@@ -72,7 +72,7 @@ class App extends BaseComponent {
 
   loadAudio() {
     const song = {
-      url: "assets/music/hotel-california.mp3",
+      url: "assets/music/dancing-with-kadafi.mp3",
       title: "Hotel California",
     };
     const player = createPlayer(song.url);
@@ -80,6 +80,8 @@ class App extends BaseComponent {
     const audioUtil = createAnalyser(player.node, player.context, {
       stereo: false,
     });
+
+    audioUtil.analyser.fftSize = this.props.frequencyBins * 2;
 
     player.on("load", () => {
       console.log("Audio loaded...");
@@ -177,6 +179,7 @@ App.defaultProps = {
   // Artificially inflate preload time so
   // we can see it for demo purposes
   fakePreloadTime: 1250,
+  frequencyBins: 64,
 };
 
 module.exports = App;

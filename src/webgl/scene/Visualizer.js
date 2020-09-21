@@ -9,19 +9,20 @@ const frequencyAverage = require("analyser-frequency-average");
 // tell the preloader to include this asset
 // we need to define this outside of our class, otherwise
 // it won't get included in the preloader until *after* its done loading
-const gltfKey = assets.queue({
-  url: "assets/models/honeycomb.gltf",
-});
+// const gltfKey = assets.queue({
+//   url: "assets/models/honeycomb.gltf",
+// });
 
 module.exports = class Visualizer extends THREE.Object3D {
   constructor() {
     super();
 
-    // now fetch the loaded resource
-    const gltf = assets.get(gltfKey);
-
+    // Audio properties
     this.nowPlaying = null;
+    this.frequencyBins = 1;
+    this.barMeshes = [];
 
+    // Shader setup
     this.material = new LiveShaderMaterial(honeyShader, {
       transparent: true,
       uniforms: {
@@ -35,19 +36,6 @@ module.exports = class Visualizer extends THREE.Object3D {
     this.altMaterial = new THREE.MeshNormalMaterial();
 
     this.children = [];
-
-    // Replaces all meshes material with something basic
-    gltf.scene.traverse((child) => {
-      if (child.isMesh) {
-        child.material = this.material;
-
-        // ThreeJS attaches something odd here on GLTF ipmport
-        child.onBeforeRender = () => {};
-        this.children.push(child);
-      }
-    });
-
-    this.add(gltf.scene);
 
     if (gui) {
       // assume it can be falsey, e.g. if we strip dat-gui out of bundle
@@ -67,13 +55,33 @@ module.exports = class Visualizer extends THREE.Object3D {
     }
   }
 
+  createVisualizerMeshes() {
+    const totalWidth = 2.5;
+    const barSize = totalWidth / (2 * this.frequencyBins);
+    for (let i = 0; i < this.frequencyBins; i++) {
+      const geometry = new THREE.BoxGeometry(barSize, 1, barSize);
+      const material = new THREE.MeshNormalMaterial();
+      const bar = new THREE.Mesh(geometry, material);
+      bar.translateX(2 * i * barSize - 0.5 * totalWidth);
+
+      this.barMeshes.push(bar);
+      this.add(bar);
+    }
+  }
+
   onAppDidUpdate(oldProps, oldState, newProps, newState) {
-    const material = newState.isAltMaterial ? this.altMaterial : this.material;
+    const material = this.altMaterial;
     this.children.forEach((child) => {
       child.material = material;
     });
 
-    this.nowPlaying = newState.nowPlaying;
+    if (newState.nowPlaying) {
+      this.nowPlaying = newState.nowPlaying;
+      if (this.frequencyBins != newProps.frequencyBins) {
+        this.frequencyBins = newProps.frequencyBins;
+        this.createVisualizerMeshes();
+      }
+    }
   }
 
   animateIn(opt = {}) {
@@ -97,24 +105,23 @@ module.exports = class Visualizer extends THREE.Object3D {
 
   update(dt = 0, time = 0) {
     // This function gets propagated down from the WebGL app to all children
-    this.rotation.y += dt * 0.1;
+    this.rotation.x += dt * 0.5;
     this.material.uniforms.time.value = time;
 
-    // console.log(this.nowPlaying);
     // grab our byte frequency data for this frame
     const { audioUtil } = this.nowPlaying;
-    var freqs = audioUtil.frequencies();
+    const frequencies = audioUtil.frequencies();
 
     // find an average signal between two Hz ranges
-    var minHz = 40;
-    var maxHz = 100;
-    var avg = frequencyAverage(audioUtil.analyser, freqs, minHz, maxHz);
+    // const minHz = 40;
+    // const maxHz = 100;
+    // let avg = frequencyAverage(audioUtil.analyser, frequencies, minHz, maxHz);
+    // avg = avg ? avg : 0.001;
+    // this.scale.y = avg;
 
-    avg = avg ? avg : 0.001;
-
-    this.scale.x = avg;
-    this.scale.y = avg;
-    this.scale.z = avg;
+    frequencies.forEach((item, i) => {
+      this.barMeshes[i].scale.y = item ? item * 0.005 : 0.001;
+    });
   }
 
   onTouchStart(ev, pos) {
