@@ -5,9 +5,14 @@ const classnames = require("classnames");
 const animate = require("@jam3/gsap-promise");
 const PreactTransitionGroup = require("preact-transition-group");
 
+const objectMap = (obj, fn) =>
+  Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)]));
+
 // Audio
 const createPlayer = require("web-audio-player");
 const createAnalyser = require("web-audio-analyser");
+
+const songTags = JSON.parse(require("../music-data/jungle-boogie.json"));
 
 // DOM Sections
 const Landing = require("../sections/Landing/Landing");
@@ -19,7 +24,8 @@ const WebGLCanvas = require("../components/WebGLCanvas/WebGLCanvas");
 
 // WebGL scenes
 // const Honeycomb = require("../webgl/scene/Honeycomb");
-const Visualizer = require("../webgl/scene/Visualizer");
+const SpectrumVisualizer = require("../webgl/scene/SpectrumVisualizer");
+const MuserVisualizer = require("../webgl/scene/MuserVisualizer");
 
 const { assets, webgl } = require("../context");
 
@@ -32,7 +38,12 @@ class App extends BaseComponent {
       isAltMaterial: false,
       section: "Preloader",
       isPlaying: false,
-      nowPlaying: null,
+      nowPlaying: {
+        title: "-",
+        currentTime: 0,
+        duration: 0,
+        tags: {},
+      },
     };
   }
 
@@ -63,6 +74,11 @@ class App extends BaseComponent {
 
     this.loadAudio();
     this.loadWebGL();
+
+    // Update song current time
+    setInterval(() => {
+      this.updateNowPlaying();
+    }, 200);
   }
 
   componentWillUnmount() {
@@ -72,10 +88,10 @@ class App extends BaseComponent {
 
   loadAudio() {
     const song = {
-      url: "assets/music/dancing-with-kadafi.mp3",
-      title: "Hotel California",
+      id: "jungle-boogie",
+      title: "jungle-boogie",
     };
-    const player = createPlayer(song.url);
+    const player = createPlayer(`assets/music/${song.id}.mp3`);
 
     const audioUtil = createAnalyser(player.node, player.context, {
       stereo: false,
@@ -88,12 +104,33 @@ class App extends BaseComponent {
       player.node.connect(player.context.destination);
       this.setState({
         nowPlaying: {
-          title: "Hotel California",
+          title: song.title,
+          currentTime: 0,
+          duration: player.duration,
           audio: player,
           audioUtil: audioUtil,
         },
       });
     });
+  }
+
+  updateNowPlaying() {
+    if (this.state.nowPlaying.audio) {
+      const currentTime = this.state.nowPlaying.audio.currentTime; // In seconds
+      const currentTagsIndex = Math.floor(currentTime / this.props.tagDuration);
+      const currentTags = objectMap(
+        songTags,
+        (tagList) => tagList[currentTagsIndex]
+      );
+      this.setState({
+        nowPlaying: {
+          ...this.state.nowPlaying,
+          currentTime,
+          tags: currentTags,
+        },
+      });
+      // console.log(currentTags);
+    }
   }
 
   loadWebGL() {
@@ -109,7 +146,7 @@ class App extends BaseComponent {
       }, this.props.fakePreloadTime);
 
       // Add any "WebGL components" here...
-      webgl.scene.add(new Visualizer());
+      webgl.scene.add(new MuserVisualizer());
     });
   }
 
@@ -144,6 +181,7 @@ class App extends BaseComponent {
             key="Muser"
             onTogglePlay={this.handleToggleAudio}
             isPlaying={this.state.isPlaying}
+            nowPlaying={this.state.nowPlaying}
           />
         );
     }
@@ -180,6 +218,7 @@ App.defaultProps = {
   // we can see it for demo purposes
   fakePreloadTime: 1250,
   frequencyBins: 64,
+  tagDuration: 1,
 };
 
 module.exports = App;
