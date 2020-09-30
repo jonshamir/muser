@@ -10,13 +10,6 @@ const genreTags = require("../../music-data/genres.json");
 const MaterialButton = require("../../components/MaterialButton/MaterialButton");
 const Header = require("../../components/Header/Header");
 
-function compareGenres(a, b) {
-  if (a.value > b.value) return -1;
-  if (b.value > a.value) return 1;
-
-  return 0;
-}
-
 const formatTime = (seconds) =>
   new Date(seconds * 1000).toISOString().substr(14, 5);
 
@@ -70,19 +63,6 @@ class Muser extends BaseComponent {
 
     const { nowPlaying } = this.state;
 
-    const currentGenres = genreTags.map((genre) => ({
-      title: genre.title,
-      color: genre.color,
-      // value: this.props.nowPlaying.tags[genre.title],
-      value: {},
-    }));
-
-    // console.log(this.props.nowPlaying.tags);
-
-    currentGenres.sort(compareGenres);
-
-    const topGenres = currentGenres.slice(0, 5);
-
     return (
       <div
         className={classes}
@@ -101,12 +81,11 @@ class Muser extends BaseComponent {
           {nowPlaying.title} | {formatTime(nowPlaying.time)} /{" "}
           {formatTime(nowPlaying.duration)}
           <br />
-          {/*topGenres.map((genre) => (
+          {nowPlaying.genres.slice(0, 5).map((genre) => (
             <div style={{ color: genre.color }}>
-              {genre.title}:
-              {Math.floor(this.props.nowPlaying.tags[genre.title] * 100)}
+              {genre.title}:{Math.floor(nowPlaying.tags[genre.title] * 100)}
             </div>
-          ))*/}
+          ))}
         </div>
         <MaterialButton
           onClick={this.handleToggleAudio}
