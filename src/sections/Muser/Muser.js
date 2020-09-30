@@ -47,6 +47,8 @@ class Muser extends BaseComponent {
       value: this.props.nowPlaying.tags[genre.title],
     }));
 
+    // console.log(this.props.nowPlaying.tags);
+
     currentGenres.sort(compareGenres);
 
     const topGenres = currentGenres.slice(0, 5);

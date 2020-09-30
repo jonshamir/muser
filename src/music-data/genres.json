@@ -1,4 +1,7 @@
 [
+  { "title": "classical", "color": "#888888" },
+  { "title": "classic", "color": "#888888" },
+  { "title": "opera", "color": "#888888" },
   { "title": "ambient", "color": "#741b47" },
   { "title": "chill", "color": "#741b47" },
   { "title": "chillout", "color": "#741b47" },
