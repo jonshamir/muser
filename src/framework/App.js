@@ -5,9 +5,6 @@ const classnames = require("classnames");
 const animate = require("@jam3/gsap-promise");
 const PreactTransitionGroup = require("preact-transition-group");
 
-const objectMap = (obj, fn) =>
-  Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)]));
-
 // DOM Sections
 const Landing = require("../sections/Landing/Landing");
 const Muser = require("../sections/Muser/Muser");
@@ -60,11 +57,6 @@ class App extends BaseComponent {
     webgl.canvas.addEventListener("mousedown", this.handlePreventDefault);
 
     this.loadWebGL();
-
-    // Update song current time
-    // setInterval(() => {
-    //   this.updateNowPlaying();
-    // }, 200);
   }
 
   componentWillUnmount() {

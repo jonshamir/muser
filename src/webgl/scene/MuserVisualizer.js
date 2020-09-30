@@ -73,9 +73,7 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
       child.material = material;
     });
 
-    if (player.audioLoaded) {
-      this.createVisualizerMeshes();
-    }
+    if (this.barMeshes.length == 0) this.createVisualizerMeshes();
   }
 
   animateIn(opt = {}) {
@@ -102,7 +100,7 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     this.material.uniforms.time.value = time;
 
     // grab our byte frequency data for this frame
-    const frequencies = player.audioUtil.frequencies();
+    const frequencies = player.getCurrentFrequencies();
 
     frequencies.forEach((item, i) => {
       this.barMeshes[i].scale.y = item ? item * 0.005 : 0.001;

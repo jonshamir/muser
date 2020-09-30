@@ -17,12 +17,23 @@ function compareGenres(a, b) {
   return 0;
 }
 
+const formatTime = (seconds) =>
+  new Date(seconds * 1000).toISOString().substr(14, 5);
+
 class Muser extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
       isPlaying: false,
+      nowPlaying: player.getNowPlayingData(),
     };
+  }
+
+  componentDidMount() {
+    // Update song data
+    setInterval(() => {
+      this.updateNowPlaying();
+    }, 200);
   }
 
   animateIn() {
@@ -36,8 +47,11 @@ class Muser extends BaseComponent {
     return Promise.all([this.header.animateOut()]);
   }
 
-  formatTime(seconds) {
-    return new Date(seconds * 1000).toISOString().substr(14, 5);
+  updateNowPlaying() {
+    const nowPlaying = player.getNowPlayingData();
+    if (Math.floor(nowPlaying.time) != Math.floor(this.state.nowPlaying.time)) {
+      this.setState({ nowPlaying });
+    }
   }
 
   handleToggleAudio = () => {
@@ -53,6 +67,8 @@ class Muser extends BaseComponent {
     const classes = classnames({
       Muser: true,
     });
+
+    const { nowPlaying } = this.state;
 
     const currentGenres = genreTags.map((genre) => ({
       title: genre.title,
@@ -82,7 +98,8 @@ class Muser extends BaseComponent {
           Muser
         </Header>
         <div class="text">
-          {player.nowPlaying.title} | {player.currentTime} / {player.duration}
+          {nowPlaying.title} | {formatTime(nowPlaying.time)} /{" "}
+          {formatTime(nowPlaying.duration)}
           <br />
           {/*topGenres.map((genre) => (
             <div style={{ color: genre.color }}>
