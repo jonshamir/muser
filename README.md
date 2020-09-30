@@ -1,10 +1,12 @@
 # muser
 
-## Credits
-* threejs-app - basic web app template
-* musicnn - smart music tags
-* musicmap - colors & data
+Smart music visualizer
 
+## Credits
+
+- threejs-app - basic web app template
+- musicnn - smart music tags
+- musicmap - colors & data
 
 ## Usage
 
