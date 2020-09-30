@@ -6,7 +6,7 @@ import matplotlib.gridspec as gridspec
 
 from musicnn.extractor import extractor
 
-file_name = 'dancing-with-kadafi'
+file_name = 'bohemian-rhapsody'
 input_path = 'app/assets/music/' + file_name + '.mp3'
 output_path = 'src/music-data/' + file_name + '.json'
 
@@ -44,7 +44,7 @@ def showTags(taggram, tags, features):
     # y-axis
     y_pos = np.arange(len(tags))
     ax.set_yticks(y_pos)
-    ax.set_yticklabels(tags, fontsize=fontsize-1)
+    ax.set_yticklabels(tags, fontsize=fontsize-2)
 
     # x-axis
     x_pos = np.arange(taggram.shape[0])

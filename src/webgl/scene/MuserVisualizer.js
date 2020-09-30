@@ -105,7 +105,6 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
 
   update(dt = 0, time = 0) {
     // This function gets propagated down from the WebGL app to all children
-    this.rotation.x += dt * 0.5;
     this.material.uniforms.time.value = time;
 
     // grab our byte frequency data for this frame

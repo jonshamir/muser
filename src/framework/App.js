@@ -12,7 +12,7 @@ const objectMap = (obj, fn) =>
 const createPlayer = require("web-audio-player");
 const createAnalyser = require("web-audio-analyser");
 
-const songTags = require("../music-data/dancing-with-kadafi.json");
+const songTags = require("../music-data/bohemian-rhapsody.json");
 
 // DOM Sections
 const Landing = require("../sections/Landing/Landing");
@@ -88,7 +88,7 @@ class App extends BaseComponent {
 
   loadAudio() {
     const song = {
-      id: "dancing-with-kadafi",
+      id: "bohemian-rhapsody",
     };
     const player = createPlayer(`assets/music/${song.id}.mp3`);
 
