@@ -1,4 +1,4 @@
-const { gui, webgl, assets } = require("../../context");
+const { gui, webgl, assets, player } = require("../../context");
 
 const LiveShaderMaterial = require("../materials/LiveShaderMaterial");
 const honeyShader = require("../shaders/honey.shader");
@@ -18,8 +18,6 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     super();
 
     // Audio properties
-    this.nowPlaying = null;
-    this.frequencyBins = 1;
     this.barMeshes = [];
 
     // Shader setup
@@ -57,8 +55,8 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
 
   createVisualizerMeshes() {
     const totalWidth = 2.5;
-    const barSize = totalWidth / (2 * this.frequencyBins);
-    for (let i = 0; i < this.frequencyBins; i++) {
+    const barSize = totalWidth / (2 * player.numFrequencyBins);
+    for (let i = 0; i < player.numFrequencyBins; i++) {
       const geometry = new THREE.BoxGeometry(barSize, 1, barSize);
       const material = new THREE.MeshLambertMaterial();
       const bar = new THREE.Mesh(geometry, material);
@@ -75,12 +73,8 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
       child.material = material;
     });
 
-    if (newState.nowPlaying.audio) {
-      this.nowPlaying = newState.nowPlaying;
-      if (this.frequencyBins != newProps.frequencyBins) {
-        this.frequencyBins = newProps.frequencyBins;
-        this.createVisualizerMeshes();
-      }
+    if (player.audioLoaded) {
+      this.createVisualizerMeshes();
     }
   }
 
@@ -108,8 +102,11 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     this.material.uniforms.time.value = time;
 
     // grab our byte frequency data for this frame
-    const { audioUtil } = this.nowPlaying;
-    const frequencies = audioUtil.frequencies();
+    const frequencies = player.audioUtil.frequencies();
+
+    frequencies.forEach((item, i) => {
+      this.barMeshes[i].scale.y = item ? item * 0.005 : 0.001;
+    });
 
     // find an average signal between two Hz ranges
     // const minHz = 40;
@@ -117,10 +114,6 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     // let avg = frequencyAverage(audioUtil.analyser, frequencies, minHz, maxHz);
     // avg = avg ? avg : 0.001;
     // this.scale.y = avg;
-
-    frequencies.forEach((item, i) => {
-      this.barMeshes[i].scale.y = item ? item * 0.005 : 0.001;
-    });
   }
 
   onTouchStart(ev, pos) {

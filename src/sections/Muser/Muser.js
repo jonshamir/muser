@@ -3,6 +3,8 @@ const { h, Component } = require("preact");
 const BaseComponent = require("../../components/BaseComponent/BaseComponent");
 const classnames = require("classnames");
 const animate = require("@jam3/gsap-promise");
+
+const { player } = require("../../context");
 const genreTags = require("../../music-data/genres.json");
 
 const MaterialButton = require("../../components/MaterialButton/MaterialButton");
@@ -18,7 +20,9 @@ function compareGenres(a, b) {
 class Muser extends BaseComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isPlaying: false,
+    };
   }
 
   animateIn() {
@@ -36,6 +40,15 @@ class Muser extends BaseComponent {
     return new Date(seconds * 1000).toISOString().substr(14, 5);
   }
 
+  handleToggleAudio = () => {
+    if (this.state.isPlaying) player.pause();
+    else player.play();
+
+    this.setState({
+      isPlaying: !this.state.isPlaying,
+    });
+  };
+
   render() {
     const classes = classnames({
       Muser: true,
@@ -44,7 +57,8 @@ class Muser extends BaseComponent {
     const currentGenres = genreTags.map((genre) => ({
       title: genre.title,
       color: genre.color,
-      value: this.props.nowPlaying.tags[genre.title],
+      // value: this.props.nowPlaying.tags[genre.title],
+      value: {},
     }));
 
     // console.log(this.props.nowPlaying.tags);
@@ -68,24 +82,22 @@ class Muser extends BaseComponent {
           Muser
         </Header>
         <div class="text">
-          {this.props.nowPlaying.title} |{" "}
-          {this.formatTime(this.props.nowPlaying.currentTime)} /{" "}
-          {this.formatTime(this.props.nowPlaying.duration)}
+          {player.nowPlaying.title} | {player.currentTime} / {player.duration}
           <br />
-          {topGenres.map((genre) => (
+          {/*topGenres.map((genre) => (
             <div style={{ color: genre.color }}>
               {genre.title}:
               {Math.floor(this.props.nowPlaying.tags[genre.title] * 100)}
             </div>
-          ))}
+          ))*/}
         </div>
         <MaterialButton
-          onClick={this.props.onTogglePlay}
+          onClick={this.handleToggleAudio}
           ref={(c) => {
             this.button = c;
           }}
         >
-          {this.props.isPlaying ? "pause" : "play"}
+          {this.state.isPlaying ? "pause" : "play"}
         </MaterialButton>
       </div>
     );
