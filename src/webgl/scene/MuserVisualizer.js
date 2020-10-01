@@ -3,22 +3,22 @@ const { gui, webgl, assets, player } = require("../../context");
 const LiveShaderMaterial = require("../materials/LiveShaderMaterial");
 const honeyShader = require("../shaders/honey.shader");
 const animate = require("@jam3/gsap-promise");
+const chroma = require("chroma-js");
 
 const frequencyAverage = require("analyser-frequency-average");
-
-// tell the preloader to include this asset
-// we need to define this outside of our class, otherwise
-// it won't get included in the preloader until *after* its done loading
-// const gltfKey = assets.queue({
-//   url: "assets/models/honeycomb.gltf",
-// });
+const genreTags = require("../../music-data/genres.json");
 
 module.exports = class MuserVisualizer extends THREE.Object3D {
   constructor() {
     super();
 
-    // Audio properties
+    // Visualization properties
+    this.visualizationWidth = 2.5;
+    this.createdMeshes = false;
     this.barMeshes = [];
+    this.genreMeshes = {};
+    this.prevBG = "#000000";
+    this.currBG = "#000000";
 
     // Shader setup
     this.material = new LiveShaderMaterial(honeyShader, {
@@ -53,18 +53,35 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     }
   }
 
-  createVisualizerMeshes() {
-    const totalWidth = 2.5;
+  createFrequencyMeshes() {
+    const totalWidth = this.visualizationWidth;
     const barSize = totalWidth / (2 * player.numFrequencyBins);
     for (let i = 0; i < player.numFrequencyBins; i++) {
       const geometry = new THREE.BoxGeometry(barSize, 1, barSize);
       const material = new THREE.MeshLambertMaterial();
       const bar = new THREE.Mesh(geometry, material);
       bar.translateX(2 * i * barSize - 0.5 * totalWidth);
+      bar.translateY(0.6);
 
       this.barMeshes.push(bar);
       this.add(bar);
     }
+  }
+
+  createGenreMeshes() {
+    const totalWidth = this.visualizationWidth;
+    const meshSize = totalWidth / genreTags.length;
+
+    genreTags.forEach((genre, i) => {
+      const geometry = new THREE.BoxGeometry(1, meshSize, meshSize);
+      const material = new THREE.MeshBasicMaterial({ color: genre.color });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.translateX(i * meshSize - 0.5 * totalWidth);
+      mesh.translateY(-0.4);
+
+      this.genreMeshes[genre.title] = mesh;
+      this.add(mesh);
+    });
   }
 
   onAppDidUpdate(oldProps, oldState, newProps, newState) {
@@ -73,7 +90,11 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
       child.material = material;
     });
 
-    if (this.barMeshes.length == 0) this.createVisualizerMeshes();
+    if (!this.createdMeshes) {
+      this.createFrequencyMeshes();
+      this.createGenreMeshes();
+      this.createdMeshes = true;
+    }
   }
 
   animateIn(opt = {}) {
@@ -99,19 +120,58 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     // This function gets propagated down from the WebGL app to all children
     this.material.uniforms.time.value = time;
 
-    // grab our byte frequency data for this frame
+    // Visualize frequencies
     const frequencies = player.getCurrentFrequencies();
 
     frequencies.forEach((item, i) => {
       this.barMeshes[i].scale.y = item ? item * 0.005 : 0.001;
     });
 
-    // find an average signal between two Hz ranges
-    // const minHz = 40;
-    // const maxHz = 100;
-    // let avg = frequencyAverage(audioUtil.analyser, frequencies, minHz, maxHz);
-    // avg = avg ? avg : 0.001;
-    // this.scale.y = avg;
+    // Visualize genres
+    const totalWidth = this.visualizationWidth;
+
+    const nowPlayingData = player.getNowPlayingData();
+    const topGenres = nowPlayingData.genres.slice(0, 5);
+
+    // Hide all genres off-screen
+    for (const genre in this.genreMeshes) {
+      this.genreMeshes[genre].position.x = 100;
+    }
+
+    // Show & scale top genres
+    const genreSum = topGenres.reduce((sum, genre) => ({
+      value: sum.value + genre.value,
+    })).value;
+
+    let currPosX = 0;
+    let colors = [];
+    let weights = [];
+    topGenres.forEach((genre, i) => {
+      const weight = genre.value / genreSum;
+      const width = totalWidth * weight;
+      this.genreMeshes[genre.title].scale.x = width;
+      this.genreMeshes[genre.title].position.x =
+        currPosX + 0.5 * width - 0.5 * totalWidth;
+      currPosX += width;
+
+      colors.push(genre.color);
+      weights.push(weight);
+    });
+
+    // Background color
+    const averageColor = chroma.average(colors, "lab", weights).hex();
+    if (averageColor != this.currBG) {
+      this.prevBG = this.currBG;
+      this.currBG = averageColor;
+    }
+
+    const a = player._webAudioPlayer.currentTime % 1;
+    const currColor = chroma.average([this.prevBG, this.currBG], "lab", [
+      1 - a,
+      a,
+    ]);
+
+    webgl.renderer.setClearColor(currColor.hex(), 1);
   }
 
   onTouchStart(ev, pos) {

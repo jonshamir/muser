@@ -63,6 +63,11 @@ class Muser extends BaseComponent {
 
     const { nowPlaying } = this.state;
 
+    const topGenres = nowPlaying.genres.slice(0, 5);
+    const genreSum = topGenres.reduce((sum, genre) => ({
+      value: sum.value + genre.value,
+    })).value;
+
     return (
       <div
         className={classes}
@@ -78,23 +83,26 @@ class Muser extends BaseComponent {
           Muser
         </Header>
         <div class="text">
-          {nowPlaying.title} | {formatTime(nowPlaying.time)} /{" "}
-          {formatTime(nowPlaying.duration)}
-          <br />
-          {nowPlaying.genres.slice(0, 5).map((genre) => (
+          <div class="controls">
+            <MaterialButton
+              onClick={this.handleToggleAudio}
+              ref={(c) => {
+                this.button = c;
+              }}
+            >
+              {this.state.isPlaying ? "pause" : "play"}
+            </MaterialButton>
+            {formatTime(nowPlaying.time)} / {formatTime(nowPlaying.duration)}
+          </div>
+          <strong>{nowPlaying.title}</strong>
+          <br /> <br />
+          {topGenres.map((genre) => (
             <div style={{ color: genre.color }}>
-              {genre.title}:{Math.floor(nowPlaying.tags[genre.title] * 100)}
+              {genre.title}:{" "}
+              {Math.floor((nowPlaying.tags[genre.title] / genreSum) * 100)}%
             </div>
           ))}
         </div>
-        <MaterialButton
-          onClick={this.handleToggleAudio}
-          ref={(c) => {
-            this.button = c;
-          }}
-        >
-          {this.state.isPlaying ? "pause" : "play"}
-        </MaterialButton>
       </div>
     );
   }
