@@ -12,20 +12,44 @@
   .MaterialButton {
     margin-bottom: 1rem;
     text-align: center;
+    width: 3em;
+    display: inline-block;
+    margin: 0.5em;
   }
+
   .text {
     bottom: 1rem;
     left: 1rem;
     right: 1rem;
 
     position: absolute;
-    background-color: #fff;
+    background-color: #ddd;
     padding: 1em;
   }
 
   .controls {
     float: right;
-    width: 120px;
+    width: 200px;
     text-align: right;
+  }
+
+  .genreTag {
+    color: #555;
+    font-size: 0.8em;
+    width: 8em;
+    float: left;
+    text-align: right;
+    padding-right: 0.5em;
+    box-sizing: border-box;
+    text-transform: capitalize;
+  }
+
+  .genreBar {
+    font-size: 0.8em;
+    padding: 0.5em;
+    margin: 0.5em 0;
+    transition: all 250ms ease-out;
+    white-space: nowrap;
+    margin-left: 8em;
   }
 }

@@ -42,7 +42,10 @@ class Muser extends BaseComponent {
 
   updateNowPlaying() {
     const nowPlaying = player.getNowPlayingData();
-    if (Math.floor(nowPlaying.time) != Math.floor(this.state.nowPlaying.time)) {
+    if (
+      Math.floor(nowPlaying.currentTime) !=
+      Math.floor(this.state.nowPlaying.currentTime)
+    ) {
       this.setState({ nowPlaying });
     }
   }
@@ -63,11 +66,6 @@ class Muser extends BaseComponent {
 
     const { nowPlaying } = this.state;
 
-    const topGenres = nowPlaying.genres.slice(0, 5);
-    const genreSum = topGenres.reduce((sum, genre) => ({
-      value: sum.value + genre.value,
-    })).value;
-
     return (
       <div
         className={classes}
@@ -84,6 +82,8 @@ class Muser extends BaseComponent {
         </Header>
         <div class="text">
           <div class="controls">
+            {formatTime(nowPlaying.currentTime)} /{" "}
+            {formatTime(nowPlaying.duration)}
             <MaterialButton
               onClick={this.handleToggleAudio}
               ref={(c) => {
@@ -92,14 +92,21 @@ class Muser extends BaseComponent {
             >
               {this.state.isPlaying ? "pause" : "play"}
             </MaterialButton>
-            {formatTime(nowPlaying.time)} / {formatTime(nowPlaying.duration)}
           </div>
           <strong>{nowPlaying.title}</strong>
           <br /> <br />
-          {topGenres.map((genre) => (
-            <div style={{ color: genre.color }}>
-              {genre.title}:{" "}
-              {Math.floor((nowPlaying.tags[genre.title] / genreSum) * 100)}%
+          {nowPlaying.topGenres.map((genre) => (
+            <div>
+              <div className="genreTag">
+                {genre.title} <strong>{Math.floor(genre.weight * 100)}%</strong>
+              </div>
+              <div
+                class="genreBar"
+                style={{
+                  backgroundColor: genre.color,
+                  width: `${genre.weight * 80}%`,
+                }}
+              ></div>
             </div>
           ))}
         </div>
