@@ -1,12 +1,13 @@
 // Audio
 const createPlayer = require("web-audio-player");
 const createAnalyser = require("web-audio-analyser");
+
 const chroma = require("chroma-js");
 
-const genreTags = require("../music-data/genres.json");
+const genreTags = require("../data/genres.json");
 
-const songTitle = "lie";
-const songTags = require("../music-data/lie.json");
+const playlist = require("../data/playlist.json");
+const trackTags = require("../data/music-tags/lovin-you.json");
 
 const average = (nums) => nums.reduce((a, b) => a + b) / nums.length;
 
@@ -23,6 +24,9 @@ class AudioPlayer {
   constructor(opt = {}) {
     this._renderer = opt.renderer;
     this.isPlaying = false;
+    this.playlist = playlist;
+    this._currentTrack = null;
+    this._currentTrackTags = null;
 
     this._webAudioPlayer = null;
     this._webAudioUtil = null;
@@ -32,6 +36,7 @@ class AudioPlayer {
 
     this._nowPlayingData = {
       title: "-",
+      artist: "-",
       tags: [],
       topGenres: [
         { title: "-", color: "#000", weight: 0 },
@@ -44,17 +49,13 @@ class AudioPlayer {
       duration: 0,
     };
 
-    this.playlist = [];
-
-    this._loadAudio();
-
-    // fetch("assets/music-data/rap-god.json")
-    //   .then((response) => response.json())
-    //   .then((data) => console.log(data));
+    this._loadTrack(playlist[1]);
   }
 
-  _loadAudio() {
-    const player = createPlayer(`assets/music/${songTitle}.mp3`);
+  _loadTrack(track) {
+    this._currentTrack = track;
+    this._currentTrackTags = trackTags;
+    const player = createPlayer(track.path);
 
     const audioUtil = createAnalyser(player.node, player.context, {
       stereo: false,
@@ -69,7 +70,14 @@ class AudioPlayer {
       player.node.connect(player.context.destination);
       this._webAudioPlayer = player;
       this._webAudioUtil = audioUtil;
+
+      this._nowPlayingData.title = track.title;
+      this._nowPlayingData.artist = track.artist;
     });
+
+    // fetch("assets/music-data/rap-god.json")
+    //   .then((response) => response.json())
+    //   .then((data) => console.log(data));
   }
 
   play() {
@@ -127,7 +135,7 @@ class AudioPlayer {
     ) {
       const currentTagsIndex = Math.floor(currentTime / this._tagDuration);
       const currentTags = objectMap(
-        songTags,
+        this._currentTrackTags,
         (tagList) => tagList[currentTagsIndex]
       );
 
@@ -156,7 +164,8 @@ class AudioPlayer {
       const topGenresColor = chroma.average(colors, "lab", weights).hex();
 
       this._nowPlayingData = {
-        title: songTitle,
+        title: this._currentTrack.title,
+        artist: this._currentTrack.artist,
         tags: currentTags,
         topGenres,
         topGenresColor,

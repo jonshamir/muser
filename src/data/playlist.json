@@ -1,0 +1,103 @@
+[
+  {
+    "path": "assets/music/lovin-you.mp3",
+    "title": "Since I've Been Loving You",
+    "artist": "Led Zeppelin"
+  },
+  {
+    "path": "assets/music/sabotage.mp3",
+    "title": "Sabotage",
+    "artist": "Beastie Boys"
+  },
+  {
+    "path": "assets/music/stairway-to-heaven.mp3",
+    "title": "Stairway to Heaven",
+    "artist": "Led Zeppelin"
+  },
+  {
+    "path": "assets/music/all-along-the-watchtower.mp3",
+    "title": "All Along the Watchtower",
+    "artist": "The Jimi Hendrix Experience"
+  },
+  {
+    "path": "assets/music/cocaine.mp3",
+    "title": "Cocaine",
+    "artist": "Eric Clapton"
+  },
+  {
+    "path": "assets/music/hallelujah.mp3",
+    "title": "Hallelujah",
+    "artist": "Jeff Buckley"
+  },
+  {
+    "path": "assets/music/artillery.mp3",
+    "title": "Artillery",
+    "artist": "Infected Mushroom feat. Swollen Members"
+  },
+  {
+    "path": "assets/music/my-sweet-lord.mp3",
+    "title": "My Sweet Lord",
+    "artist": "George Harrison"
+  },
+  {
+    "path": "assets/music/hooked-on-a-feeling.mp3",
+    "title": "Hooked on a Feeling",
+    "artist": "Blue Swede"
+  },
+  {
+    "path": "assets/music/lie.mp3",
+    "title": "Love the Way You Lie",
+    "artist": "Eminem feat. Rihanna"
+  },
+  {
+    "path": "assets/music/no-woman-no-cry.mp3",
+    "title": "No Woman No Cry",
+    "artist": "Bob Marley"
+  },
+  { "path": "assets/music/madness.mp3", "title": "Madness", "artist": "Muse" },
+  {
+    "path": "assets/music/jungle-boogie.mp3",
+    "title": "Jungle Boogie",
+    "artist": "Kool & the Gang"
+  },
+  {
+    "path": "assets/music/knights.mp3",
+    "title": "Knights of Cydonia",
+    "artist": "Muse"
+  },
+  {
+    "path": "assets/music/rap-god.mp3",
+    "title": "Rap God",
+    "artist": "Eminem"
+  },
+  {
+    "path": "assets/music/dancing-with-kadafi.mp3",
+    "title": "Dancing With Kadafi",
+    "artist": "Infected Mushroom"
+  },
+  {
+    "path": "assets/music/bohemian-rhapsody.mp3",
+    "title": "Bohemian Rhapsody",
+    "artist": "Queen"
+  },
+  {
+    "path": "assets/music/hotel-california.mp3",
+    "title": "Hotel California",
+    "artist": "Eagles"
+  },
+  {
+    "path": "assets/music/achilles.mp3",
+    "title": "Achilles Last Stand",
+    "artist": "Led Zeppelin"
+  },
+  {
+    "path": "assets/music/question.mp3",
+    "title": "Question!",
+    "artist": "System of a Down"
+  },
+  {
+    "path": "assets/music/the-less-i-know-the-better.mp3",
+    "title": "The Less I Know the Better",
+    "artist": "Tame Impala"
+  }
+]

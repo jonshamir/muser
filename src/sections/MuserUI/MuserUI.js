@@ -5,15 +5,16 @@ const classnames = require("classnames");
 const animate = require("@jam3/gsap-promise");
 
 const { player } = require("../../context");
-const genreTags = require("../../music-data/genres.json");
 
 const MaterialButton = require("../../components/MaterialButton/MaterialButton");
 const Header = require("../../components/Header/Header");
 
-const formatTime = (seconds) =>
-  new Date(seconds * 1000).toISOString().substr(14, 5);
+const formatTime = (seconds) => {
+  if (seconds < 0) return "-";
+  return new Date(seconds * 1000).toISOString().substr(14, 5);
+};
 
-class Muser extends BaseComponent {
+class MuserUI extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,7 +81,14 @@ class Muser extends BaseComponent {
         >
           Muser
         </Header>
-        <div class="text">
+        <div class="playlist">
+          <ul>
+            {player.playlist.map((track) => (
+              <li>{track.title}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="ui-wrapper">
           <div class="controls">
             {formatTime(nowPlaying.currentTime)} /{" "}
             {formatTime(nowPlaying.duration)}
@@ -94,6 +102,8 @@ class Muser extends BaseComponent {
             </MaterialButton>
           </div>
           <strong>{nowPlaying.title}</strong>
+          <br />
+          {nowPlaying.artist}
           <br /> <br />
           {nowPlaying.topGenres.map((genre) => (
             <div>
@@ -115,8 +125,8 @@ class Muser extends BaseComponent {
   }
 }
 
-Muser.defaultProps = {
+MuserUI.defaultProps = {
   onPlay: () => {},
 };
 
-module.exports = Muser;
+module.exports = MuserUI;

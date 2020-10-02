@@ -7,7 +7,7 @@ const PreactTransitionGroup = require("preact-transition-group");
 
 // DOM Sections
 const Landing = require("../sections/Landing/Landing");
-const Muser = require("../sections/Muser/Muser");
+const MuserUI = require("../sections/MuserUI/MuserUI");
 const Preloader = require("../sections/Preloader/Preloader");
 
 // WebGL canvas component
@@ -71,7 +71,7 @@ class App extends BaseComponent {
       setTimeout(() => {
         // Once loading is complete, swap to Muser section and ensure WebGL displays
         this.setState({
-          section: "Muser",
+          section: "MuserUI",
           isLoaded: true,
         });
       }, this.props.fakePreloadTime);
@@ -97,8 +97,8 @@ class App extends BaseComponent {
         return (
           <Landing key="Landing" onMaterialSwap={this.handelMaterialSwap} />
         );
-      case "Muser":
-        return <Muser key="Muser" />;
+      case "MuserUI":
+        return <MuserUI key="MuserUI" />;
     }
   }
 
