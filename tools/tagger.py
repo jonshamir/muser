@@ -6,9 +6,9 @@ import matplotlib.gridspec as gridspec
 
 from musicnn.extractor import extractor
 
-file_name = 'lie'
+file_name = 'hooked-on-a-feeling'
 input_path = 'app/assets/music/' + file_name + '.mp3'
-output_path = 'src/data/music-tags/' + file_name + '.json'
+output_path = 'app/assets/music-tags/' + file_name + '.json'
 
 MSD_taggram, MSD_tags, MSD_features = extractor(input_path, model='MSD_musicnn', input_overlap=1, extract_features=True)
 MTT_taggram, MTT_tags, MTT_features = extractor(input_path, model='MTT_musicnn', input_overlap=1, extract_features=True)

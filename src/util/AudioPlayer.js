@@ -49,7 +49,7 @@ class AudioPlayer {
       duration: 0,
     };
 
-    this._loadTrack(playlist[1]);
+    this._loadTrack(playlist[2]);
   }
 
   _loadTrack(track) {
@@ -75,9 +75,9 @@ class AudioPlayer {
       this._nowPlayingData.artist = track.artist;
     });
 
-    // fetch("assets/music-data/rap-god.json")
-    //   .then((response) => response.json())
-    //   .then((data) => console.log(data));
+    fetch(`assets/music-tags/${track.id}.json`)
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   }
 
   play() {

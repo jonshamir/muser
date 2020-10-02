@@ -15,6 +15,7 @@ for root, dirs, files in os.walk(input_path):
         if file_path.endswith('mp3'):
             audiofile = eyed3.load(file_path)
             playlist.append({
+            'id': name[:-4],
             'path': file_path[4:],
             'title': audiofile.tag.title,
             'artist': audiofile.tag.artist
