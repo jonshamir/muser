@@ -10,15 +10,6 @@ file_name = 'hooked-on-a-feeling'
 input_path = 'app/assets/music/' + file_name + '.mp3'
 output_path = 'app/assets/music-tags/' + file_name + '.json'
 
-MSD_taggram, MSD_tags, MSD_features = extractor(input_path, model='MSD_musicnn', input_overlap=1, extract_features=True)
-MTT_taggram, MTT_tags, MTT_features = extractor(input_path, model='MTT_musicnn', input_overlap=1, extract_features=True)
-
-taggram = np.concatenate((MSD_taggram, MTT_taggram), 1)
-tags = np.concatenate((MSD_tags, MTT_tags))
-
-showTags(taggram, tags, features)
-exportJSON(taggram, tags, output_path)
-
 
 def exportJSON(taggram, tags, output_path):
     taggram_list = taggram.T.tolist()
@@ -28,7 +19,7 @@ def exportJSON(taggram, tags, output_path):
         json.dump(tags_object, outfile)
 
 
-def showTags(taggram, tags, features):
+def showTags(taggram, tags):
     plt.rcParams["figure.figsize"] = (10,8)
     fontsize = 10
     fig, ax = plt.subplots()
@@ -53,3 +44,15 @@ def showTags(taggram, tags, features):
     ax.set_xticklabels(x_label, fontsize=4)
 
     plt.show()
+
+
+print("Generating MSD tags...")
+MSD_taggram, MSD_tags, MSD_features = extractor(input_path, model='MSD_musicnn', input_overlap=1, extract_features=True)
+print("Generating MTT tags...")
+MTT_taggram, MTT_tags, MTT_features = extractor(input_path, model='MTT_musicnn', input_overlap=1, extract_features=True)
+
+taggram = np.concatenate((MSD_taggram, MTT_taggram), 1)
+tags = np.concatenate((MSD_tags, MTT_tags))
+
+showTags(taggram, tags)
+exportJSON(taggram, tags, output_path)

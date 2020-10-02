@@ -1,14 +1,12 @@
 // Audio
 const createPlayer = require("web-audio-player");
 const createAnalyser = require("web-audio-analyser");
-
 const chroma = require("chroma-js");
 
 const genreTags = require("../data/genres.json");
-
 const playlist = require("../data/playlist.json");
-const trackTags = require("../data/music-tags/lovin-you.json");
 
+// Helper functions
 const average = (nums) => nums.reduce((a, b) => a + b) / nums.length;
 
 const objectMap = (obj, fn) =>
@@ -49,12 +47,11 @@ class AudioPlayer {
       duration: 0,
     };
 
-    this._loadTrack(playlist[2]);
+    this._loadTrack(playlist[0]);
   }
 
   _loadTrack(track) {
     this._currentTrack = track;
-    this._currentTrackTags = trackTags;
     const player = createPlayer(track.path);
 
     const audioUtil = createAnalyser(player.node, player.context, {
@@ -64,7 +61,7 @@ class AudioPlayer {
     audioUtil.analyser.fftSize = this.numFrequencyBins * 2;
 
     player.on("load", () => {
-      console.log("Audio loaded...");
+      console.log("Audio loaded");
       this._audioLoaded = true;
 
       player.node.connect(player.context.destination);
@@ -77,7 +74,10 @@ class AudioPlayer {
 
     fetch(`assets/music-tags/${track.id}.json`)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => {
+        console.log("Tags loaded");
+        this._currentTrackTags = data;
+      });
   }
 
   play() {
@@ -88,6 +88,17 @@ class AudioPlayer {
   pause() {
     this.isPlaying = false;
     this._webAudioPlayer.pause();
+  }
+
+  seek(percentage) {}
+
+  switchTrack(trackId) {
+    const track = this.playlist.find((track) => track.id === trackId);
+    this._loadTrack(track);
+  }
+
+  getCurrentTime() {
+    return this._webAudioPlayer.currentTime;
   }
 
   getCurrentFrequencyData() {

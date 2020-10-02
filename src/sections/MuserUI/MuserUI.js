@@ -8,10 +8,17 @@ const { player } = require("../../context");
 
 const MaterialButton = require("../../components/MaterialButton/MaterialButton");
 const Header = require("../../components/Header/Header");
+const GenreGraph = require("../../components/GenreGraph/GenreGraph");
+const SeekBar = require("../../components/SeekBar/SeekBar");
 
 const formatTime = (seconds) => {
   if (seconds < 0) return "-";
   return new Date(seconds * 1000).toISOString().substr(14, 5);
+};
+
+const getTrackPercentage = (currentTime, duration) => {
+  if (currentTime < 0) return 0;
+  return (100 * currentTime) / duration;
 };
 
 class MuserUI extends BaseComponent {
@@ -20,6 +27,7 @@ class MuserUI extends BaseComponent {
     this.state = {
       isPlaying: false,
       nowPlaying: player.getNowPlayingData(),
+      currentTime: 0,
     };
   }
 
@@ -48,6 +56,8 @@ class MuserUI extends BaseComponent {
       Math.floor(this.state.nowPlaying.currentTime)
     ) {
       this.setState({ nowPlaying });
+    } else if (this.state.isPlaying) {
+      this.setState({ currentTime: player.getCurrentTime() });
     }
   }
 
@@ -60,12 +70,21 @@ class MuserUI extends BaseComponent {
     });
   };
 
+  handleSwitchTrack = ({ target }) => {
+    player.pause();
+    const trackId = target.value;
+    player.switchTrack(trackId);
+    this.setState({
+      isPlaying: false,
+    });
+  };
+
   render() {
     const classes = classnames({
       Muser: true,
     });
 
-    const { nowPlaying } = this.state;
+    const { nowPlaying, currentTime, isPlaying } = this.state;
 
     return (
       <div
@@ -82,11 +101,17 @@ class MuserUI extends BaseComponent {
           Muser
         </Header>
         <div class="playlist">
-          <ul>
+          <select
+            name="playlist"
+            id="playlist"
+            onChange={this.handleSwitchTrack}
+          >
             {player.playlist.map((track) => (
-              <li>{track.title}</li>
+              <option key={track.id} value={track.id}>
+                {track.title}
+              </option>
             ))}
-          </ul>
+          </select>
         </div>
         <div class="ui-wrapper">
           <div class="controls">
@@ -98,27 +123,17 @@ class MuserUI extends BaseComponent {
                 this.button = c;
               }}
             >
-              {this.state.isPlaying ? "pause" : "play"}
+              {isPlaying ? "pause" : "play"}
             </MaterialButton>
           </div>
           <strong>{nowPlaying.title}</strong>
           <br />
           {nowPlaying.artist}
-          <br /> <br />
-          {nowPlaying.topGenres.map((genre) => (
-            <div>
-              <div className="genreTag">
-                {genre.title} <strong>{Math.floor(genre.weight * 100)}%</strong>
-              </div>
-              <div
-                class="genreBar"
-                style={{
-                  backgroundColor: genre.color,
-                  width: `${genre.weight * 80}%`,
-                }}
-              ></div>
-            </div>
-          ))}
+          <br />
+          <SeekBar
+            value={getTrackPercentage(currentTime, nowPlaying.duration)}
+          />
+          <GenreGraph genres={nowPlaying.topGenres} />
         </div>
       </div>
     );

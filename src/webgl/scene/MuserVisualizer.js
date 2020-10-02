@@ -5,8 +5,6 @@ const honeyShader = require("../shaders/honey.shader");
 const animate = require("@jam3/gsap-promise");
 const chroma = require("chroma-js");
 
-const genreTags = require("../../music-data/genres.json");
-
 module.exports = class MuserVisualizer extends THREE.Object3D {
   constructor() {
     super();
@@ -81,7 +79,7 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
         this.currBG = topGenresColor;
       }
 
-      const a = player._webAudioPlayer.currentTime % 1;
+      const a = player.getCurrentTime() % 1;
       const genreColor = chroma.average([this.prevBG, this.currBG], "lab", [
         1 - a,
         a,
