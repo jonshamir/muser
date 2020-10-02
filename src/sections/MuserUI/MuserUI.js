@@ -10,6 +10,7 @@ const MaterialButton = require("../../components/MaterialButton/MaterialButton")
 const Header = require("../../components/Header/Header");
 const GenreGraph = require("../../components/GenreGraph/GenreGraph");
 const SeekBar = require("../../components/SeekBar/SeekBar");
+const TrackSelector = require("../../components/TrackSelector/TrackSelector");
 
 const formatTime = (seconds) => {
   if (seconds < 0) return "-";
@@ -26,7 +27,7 @@ class MuserUI extends BaseComponent {
     super(props);
     this.state = {
       isPlaying: false,
-      nowPlaying: player.getNowPlayingData(),
+      nowPlaying: player.getDefaultNowPlayingData(),
       currentTime: 0,
     };
   }
@@ -70,13 +71,15 @@ class MuserUI extends BaseComponent {
     });
   };
 
-  handleSwitchTrack = ({ target }) => {
-    player.pause();
+  handleSelectTrack = ({ target }) => {
     const trackId = target.value;
     player.switchTrack(trackId);
     this.setState({
       isPlaying: false,
+      nowPlaying: player.getDefaultNowPlayingData(),
+      currentTime: 0,
     });
+    console.log("handleSelectTrack");
   };
 
   render() {
@@ -101,17 +104,10 @@ class MuserUI extends BaseComponent {
           Muser
         </Header>
         <div class="playlist">
-          <select
-            name="playlist"
-            id="playlist"
-            onChange={this.handleSwitchTrack}
-          >
-            {player.playlist.map((track) => (
-              <option key={track.id} value={track.id}>
-                {track.title}
-              </option>
-            ))}
-          </select>
+          <TrackSelector
+            tracks={player.playlist}
+            onChange={this.handleSelectTrack}
+          />
         </div>
         <div class="ui-wrapper">
           <div class="controls">

@@ -18,6 +18,21 @@ const compareGenres = (a, b) => {
   return 0;
 };
 
+const defaultNowPlayingData = {
+  title: "-",
+  artist: "-",
+  tags: [],
+  topGenres: [
+    { title: "-", color: "#000", weight: 0 },
+    { title: "-", color: "#000", weight: 0 },
+    { title: "-", color: "#000", weight: 0 },
+    { title: "-", color: "#000", weight: 0 },
+    { title: "-", color: "#000", weight: 0 },
+  ],
+  currentTime: -1,
+  duration: 0,
+};
+
 class AudioPlayer {
   constructor(opt = {}) {
     this._renderer = opt.renderer;
@@ -32,20 +47,7 @@ class AudioPlayer {
     this._tagDuration = 1;
     this.numFrequencyBins = 64;
 
-    this._nowPlayingData = {
-      title: "-",
-      artist: "-",
-      tags: [],
-      topGenres: [
-        { title: "-", color: "#000", weight: 0 },
-        { title: "-", color: "#000", weight: 0 },
-        { title: "-", color: "#000", weight: 0 },
-        { title: "-", color: "#000", weight: 0 },
-        { title: "-", color: "#000", weight: 0 },
-      ],
-      currentTime: -1,
-      duration: 0,
-    };
+    this._nowPlayingData = defaultNowPlayingData;
 
     this._loadTrack(playlist[0]);
   }
@@ -93,6 +95,7 @@ class AudioPlayer {
   seek(percentage) {}
 
   switchTrack(trackId) {
+    this.pause();
     const track = this.playlist.find((track) => track.id === trackId);
     this._loadTrack(track);
   }
@@ -134,6 +137,10 @@ class AudioPlayer {
     };
 
     return data;
+  }
+
+  getDefaultNowPlayingData() {
+    return defaultNowPlayingData;
   }
 
   getNowPlayingData() {
