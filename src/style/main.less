@@ -1,7 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap");
+
 body {
   margin: 0;
   overflow: hidden;
-  font-family: 'Raleway', 'Helvetica', sans-serif;
+  font-family: "Fira Sans", sans-serif;
   font-size: 16px;
   color: #1d1d1d;
   background: #fff;
@@ -16,7 +18,7 @@ html {
   height: 100%;
 
   // So that 1rem = 10px
-  font-size: 62.5%; 
+  font-size: 62.5%;
 }
 
 @import "./mixins.less";
@@ -36,4 +38,8 @@ html {
 
   // Annoying hack to "click through" to the canvas
   pointer-events: none;
+}
+
+strong {
+  font-weight: 600;
 }

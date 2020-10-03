@@ -52,34 +52,42 @@ class AudioPlayer {
     this._loadTrack(playlist[0]);
   }
 
-  _loadTrack(track) {
+  async _loadTrack(track) {
     this._currentTrack = track;
-    const player = createPlayer(track.path);
+    this._webAudioPlayer = createPlayer(track.path);
 
-    const audioUtil = createAnalyser(player.node, player.context, {
-      stereo: false,
-    });
+    this._webAudioUtil = createAnalyser(
+      this._webAudioPlayer.node,
+      this._webAudioPlayer.context,
+      {
+        stereo: false,
+      }
+    );
 
-    audioUtil.analyser.fftSize = this.numFrequencyBins * 2;
+    this._webAudioUtil.analyser.fftSize = this.numFrequencyBins * 2;
 
-    player.on("load", () => {
-      console.log("Audio loaded");
-      this._audioLoaded = true;
+    await this._loadMP3();
 
-      player.node.connect(player.context.destination);
-      this._webAudioPlayer = player;
-      this._webAudioUtil = audioUtil;
-
-      this._nowPlayingData.title = track.title;
-      this._nowPlayingData.artist = track.artist;
-    });
-
-    fetch(`assets/music-tags/${track.id}.json`)
+    return fetch(`assets/music-tags/${track.id}.json`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Tags loaded");
         this._currentTrackTags = data;
       });
+  }
+
+  _loadMP3() {
+    return new Promise((resolve, reject) => {
+      this._webAudioPlayer.on("load", () => {
+        this._audioLoaded = true;
+
+        this._webAudioPlayer.node.connect(
+          this._webAudioPlayer.context.destination
+        );
+        this._nowPlayingData.title = this._currentTrack.title;
+        this._nowPlayingData.artist = this._currentTrack.artist;
+        resolve();
+      });
+    });
   }
 
   play() {
@@ -97,7 +105,7 @@ class AudioPlayer {
   switchTrack(trackId) {
     this.pause();
     const track = this.playlist.find((track) => track.id === trackId);
-    this._loadTrack(track);
+    return this._loadTrack(track);
   }
 
   getCurrentTime() {

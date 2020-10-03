@@ -18,7 +18,7 @@ const formatTime = (seconds) => {
 };
 
 const getTrackPercentage = (currentTime, duration) => {
-  if (currentTime < 0) return 0;
+  if (currentTime < 0 || duration <= 0) return 0;
   return (100 * currentTime) / duration;
 };
 
@@ -73,13 +73,13 @@ class MuserUI extends BaseComponent {
 
   handleSelectTrack = ({ target }) => {
     const trackId = target.value;
-    player.switchTrack(trackId);
-    this.setState({
-      isPlaying: false,
-      nowPlaying: player.getDefaultNowPlayingData(),
-      currentTime: 0,
+    player.switchTrack(trackId).then(() => {
+      this.setState({
+        isPlaying: false,
+        nowPlaying: player.getDefaultNowPlayingData(),
+        currentTime: 0,
+      });
     });
-    console.log("handleSelectTrack");
   };
 
   render() {
