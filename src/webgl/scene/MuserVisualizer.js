@@ -1,7 +1,7 @@
 const { gui, webgl, assets, player } = require("../../context");
 
 const LiveShaderMaterial = require("../materials/LiveShaderMaterial");
-const honeyShader = require("../shaders/honey.shader");
+const Particles = require("./Particles");
 const animate = require("@jam3/gsap-promise");
 const chroma = require("chroma-js");
 
@@ -15,6 +15,9 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     this.barMeshes = [];
     this.prevBG = "#ffffff";
     this.currBG = "#ffffff";
+    this.particlesBass = null;
+    this.particlesMid = null;
+    this.particlesTreble = null;
 
     this.children = [];
 
@@ -41,19 +44,46 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     }
   }
 
-  onAppDidUpdate(oldProps, oldState, newProps, newState) {
-    const material = this.altMaterial;
-    this.children.forEach((child) => {
-      child.material = material;
-    });
+  createParticles() {
+    this.particlesBass = new Particles(5, 1);
+    this.particlesMid = new Particles(10, 2);
+    this.particlesTreble = new Particles(1000, 3);
 
+    this.particlesBass.material.uniforms.uColor.value = new THREE.Vector4(
+      0,
+      0,
+      0,
+      0.8
+    );
+    this.particlesMid.material.uniforms.uColor.value = new THREE.Vector4(
+      0,
+      0,
+      0,
+      0.5
+    );
+    this.particlesTreble.material.uniforms.uColor.value = new THREE.Vector4(
+      1,
+      1,
+      1,
+      0.5
+    );
+
+    this.add(this.particlesBass);
+    this.add(this.particlesMid);
+    this.add(this.particlesTreble);
+  }
+
+  onAppDidUpdate(oldProps, oldState, newProps, newState) {
     if (!this.createdMeshes) {
-      this.createFrequencyMeshes();
+      // this.createFrequencyMeshes();
+      this.createParticles();
       this.createdMeshes = true;
     }
   }
 
   update(dt = 0, time = 0) {
+    this.rotation.y += dt * 0.1;
+
     if (player.isPlaying) {
       // Get data
       const {
@@ -67,9 +97,20 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
       const nowPlayingData = player.getNowPlayingData();
 
       // Edit scene
-      frequencies.forEach((item, i) => {
-        this.barMeshes[i].scale.y = item ? item * 0.005 : 0.001;
-      });
+      // frequencies.forEach((item, i) => {
+      //   this.barMeshes[i].scale.y = item ? item * 0.005 : 0.001;
+      // });
+
+      this.particlesBass.material.uniforms.uSize.value =
+        0.3 + 0.3 * (bass.average / 255);
+
+      this.particlesMid.material.uniforms.uSize.value =
+        0.1 + 0.1 * (mid.average / 255);
+
+      this.particlesTreble.material.uniforms.uSize.value =
+        0.01 + 0.05 * (treble.average / 255);
+
+      // console.log(total.average / 255);
 
       const topGenresColor = nowPlayingData.topGenresColor;
 
