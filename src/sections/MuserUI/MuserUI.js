@@ -6,15 +6,18 @@ const animate = require("@jam3/gsap-promise");
 
 const { player } = require("../../context");
 
-const MaterialButton = require("../../components/MaterialButton/MaterialButton");
+const Button = require("../../components/Button/Button");
+const IconButton = require("../../components/IconButton/IconButton");
 const Header = require("../../components/Header/Header");
 const GenreGraph = require("../../components/GenreGraph/GenreGraph");
 const SeekBar = require("../../components/SeekBar/SeekBar");
 const TrackSelector = require("../../components/TrackSelector/TrackSelector");
 
 const formatTime = (seconds) => {
-  if (seconds < 0) return "-";
-  return new Date(seconds * 1000).toISOString().substr(14, 5);
+  if (seconds < 0) seconds = 0;
+  if (seconds >= 60 * 10)
+    return new Date(seconds * 1000).toISOString().substr(14, 5);
+  return new Date(seconds * 1000).toISOString().substr(15, 4);
 };
 
 const getTrackPercentage = (currentTime, duration) => {
@@ -26,6 +29,7 @@ class MuserUI extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
+      isDashboardOpen: false,
       isPlaying: false,
       nowPlaying: player.getDefaultNowPlayingData(),
       currentTime: 0,
@@ -40,10 +44,7 @@ class MuserUI extends BaseComponent {
   }
 
   animateIn() {
-    return Promise.all([
-      this.header.animateIn({ delay: 0.25 }),
-      this.button.animateIn({ delay: 0.5 }),
-    ]);
+    return Promise.all([this.header.animateIn({ delay: 0.25 })]);
   }
 
   animateOut() {
@@ -82,6 +83,12 @@ class MuserUI extends BaseComponent {
     });
   };
 
+  handleToggleDashboard = () => {
+    this.setState({
+      isDashboardOpen: !this.state.isDashboardOpen,
+    });
+  };
+
   render() {
     const classes = classnames({
       Muser: true,
@@ -111,25 +118,43 @@ class MuserUI extends BaseComponent {
         </div>
         <div class="ui-wrapper">
           <div class="controls">
-            {formatTime(nowPlaying.currentTime)} /{" "}
-            {formatTime(nowPlaying.duration)}
-            <MaterialButton
+            <Button
               onClick={this.handleToggleAudio}
               ref={(c) => {
                 this.button = c;
               }}
             >
-              {isPlaying ? "pause" : "play"}
-            </MaterialButton>
+              {isPlaying ? (
+                <i class="material-icons">pause</i>
+              ) : (
+                <i class="material-icons">play_arrow</i>
+              )}
+            </Button>
+            <div class="songInfo">
+              <strong>{nowPlaying.title}</strong>
+              <br />
+              {nowPlaying.artist}
+            </div>
+
+            <div class="currentTime">
+              {formatTime(nowPlaying.currentTime)} /{" "}
+              {formatTime(nowPlaying.duration)}
+            </div>
+            <IconButton onClick={this.handleToggleDashboard}>
+              <i class="material-icons">
+                {this.state.isDashboardOpen
+                  ? "insert_chart"
+                  : "insert_chart_outlined"}
+              </i>
+            </IconButton>
           </div>
-          <strong>{nowPlaying.title}</strong>
-          <br />
-          {nowPlaying.artist}
-          <br />
+
           <SeekBar
             value={getTrackPercentage(currentTime, nowPlaying.duration)}
           />
-          <GenreGraph genres={nowPlaying.topGenres} />
+          {this.state.isDashboardOpen && (
+            <GenreGraph genres={nowPlaying.topGenres} />
+          )}
         </div>
       </div>
     );

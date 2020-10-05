@@ -29,16 +29,27 @@
     bottom: 1rem;
     left: 1rem;
     right: 1rem;
-    // display: none;
-
+    border-radius: 5px;
+    padding: 0.5em 1em;
     position: absolute;
     background-color: rgba(255, 255, 255, 0.7);
-    padding: 1em;
   }
 
   .controls {
-    float: right;
-    width: 200px;
-    text-align: right;
+    float: left;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .currentTime {
+      opacity: 0.8;
+      margin: 1em;
+      text-align: right;
+    }
+
+    .songInfo {
+      margin: 0.8em;
+      flex-grow: 1;
+    }
   }
 }

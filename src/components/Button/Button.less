@@ -1,0 +1,23 @@
+.Button {
+  .interactive;
+  .noselect;
+  color: white;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border-radius: 500px;
+  cursor: pointer;
+  transition: all 0.5s @easeOutCubic;
+  background: rgba(25, 25, 25, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transition: all 0.25s @easeOutCubic;
+    background: rgba(100, 100, 100, 1);
+  }
+  &:active {
+    transition: all 0.1s @easeOutCubic;
+    background: rgba(125, 125, 125, 1);
+  }
+}

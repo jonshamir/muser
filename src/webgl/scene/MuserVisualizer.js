@@ -45,9 +45,9 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
   }
 
   createParticles() {
-    this.particlesBass = new Particles(5, 1);
-    this.particlesMid = new Particles(10, 2);
-    this.particlesTreble = new Particles(1000, 3);
+    this.particlesBass = new Particles(8, 1.3);
+    this.particlesMid = new Particles(14, 2);
+    this.particlesTreble = new Particles(400, 3);
 
     this.particlesBass.material.uniforms.uColor.value = new THREE.Vector4(
       0,
