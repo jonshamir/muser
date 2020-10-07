@@ -30,11 +30,14 @@ class MuserUI extends BaseComponent {
     super(props);
     this.state = {
       isDashboardOpen: false,
+      areControlsHidden: false,
       isPlaying: false,
       nowPlaying: player.getDefaultNowPlayingData(),
       currentTime: 0,
       trackColors: ["#000000"],
     };
+
+    this.hideControlsTimer = null;
   }
 
   componentDidMount() {
@@ -44,6 +47,7 @@ class MuserUI extends BaseComponent {
     }, 200);
 
     window.addEventListener("keydown", (key) => this.handleKeyDown(key));
+    window.addEventListener("mousemove", () => this.resetHideControlsTimer());
 
     this.setTrack(player.playlist[0].id);
   }
@@ -52,12 +56,26 @@ class MuserUI extends BaseComponent {
     if (key.code == "Space") this.handleToggleAudio();
   }
 
+  resetHideControlsTimer(forceReset = false) {
+    const { isDashboardOpen, isPlaying } = this.state;
+    this.setState({ areControlsHidden: false });
+    clearTimeout(this.hideControlsTimer);
+
+    if (!isDashboardOpen && (forceReset || isPlaying)) {
+      this.hideControlsTimer = setTimeout(() => this.hideControls(), 3000);
+    }
+  }
+
   animateIn() {
     return Promise.all([this.header.animateIn({ delay: 0.25 })]);
   }
 
   animateOut() {
     return Promise.all([this.header.animateOut()]);
+  }
+
+  hideControls() {
+    this.setState({ areControlsHidden: true });
   }
 
   updateNowPlaying() {
@@ -74,10 +92,14 @@ class MuserUI extends BaseComponent {
 
   handleToggleAudio = () => {
     if (this.state.isPlaying) player.pause();
-    else player.play();
+    else {
+      player.play();
+      this.resetHideControlsTimer(true);
+    }
 
     this.setState({
       isPlaying: !this.state.isPlaying,
+      areControlsHidden: false,
     });
   };
 
@@ -105,11 +127,13 @@ class MuserUI extends BaseComponent {
     this.setState({
       isDashboardOpen: !this.state.isDashboardOpen,
     });
+    this.resetHideControlsTimer();
   };
 
   render() {
     const classes = classnames({
       Muser: true,
+      hidden: this.state.areControlsHidden,
     });
 
     const { nowPlaying, currentTime, isPlaying, trackColors } = this.state;

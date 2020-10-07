@@ -5,6 +5,13 @@
   align-items: center;
   flex-direction: column;
   justify-content: space-between;
+  opacity: 1;
+  transition: opacity 300ms ease;
+
+  &.hidden {
+    opacity: 0;
+    transition: opacity 3s ease;
+  }
 
   .Header {
     margin-top: 2rem;
