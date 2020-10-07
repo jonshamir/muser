@@ -33,6 +33,7 @@ class MuserUI extends BaseComponent {
       isPlaying: false,
       nowPlaying: player.getDefaultNowPlayingData(),
       currentTime: 0,
+      trackColors: ["#000000"],
     };
   }
 
@@ -41,6 +42,14 @@ class MuserUI extends BaseComponent {
     setInterval(() => {
       this.updateNowPlaying();
     }, 200);
+
+    window.addEventListener("keydown", (key) => this.handleKeyDown(key));
+
+    this.setTrack(player.playlist[0].id);
+  }
+
+  handleKeyDown(key) {
+    if (key.code == "Space") this.handleToggleAudio();
   }
 
   animateIn() {
@@ -73,14 +82,23 @@ class MuserUI extends BaseComponent {
   };
 
   handleSelectTrack = ({ target }) => {
-    const trackId = target.value;
-    player.switchTrack(trackId).then(() => {
+    this.setTrack(target.value);
+  };
+
+  setTrack = (trackId) => {
+    player.setTrack(trackId).then(() => {
       this.setState({
         isPlaying: false,
-        nowPlaying: player.getDefaultNowPlayingData(),
+        nowPlaying: player.getNowPlayingData(),
+        trackColors: player.getTrackColors(),
         currentTime: 0,
       });
     });
+  };
+
+  handleSeek = (e) => {
+    const percentage = e.target.value;
+    player.seek(percentage);
   };
 
   handleToggleDashboard = () => {
@@ -94,7 +112,7 @@ class MuserUI extends BaseComponent {
       Muser: true,
     });
 
-    const { nowPlaying, currentTime, isPlaying } = this.state;
+    const { nowPlaying, currentTime, isPlaying, trackColors } = this.state;
 
     return (
       <div
@@ -151,6 +169,8 @@ class MuserUI extends BaseComponent {
 
           <SeekBar
             value={getTrackPercentage(currentTime, nowPlaying.duration)}
+            backgroundColors={trackColors}
+            onChange={this.handleSeek}
           />
           {this.state.isDashboardOpen && (
             <GenreGraph genres={nowPlaying.topGenres} />

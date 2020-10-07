@@ -18,6 +18,16 @@ const compareGenres = (a, b) => {
   return 0;
 };
 
+const defaultCurrentTrackData = {
+  id: "",
+  path: "",
+  title: "-",
+  artist: "-",
+  tags: null,
+  topGenres: [],
+  topGenresColors: [],
+};
+
 const defaultNowPlayingData = {
   title: "-",
   artist: "-",
@@ -29,27 +39,23 @@ const defaultNowPlayingData = {
     { title: "-", color: "#000", weight: 0 },
     { title: "-", color: "#000", weight: 0 },
   ],
+  topGenresColor: "#ffffff",
   currentTime: -1,
   duration: 0,
 };
 
 class AudioPlayer {
   constructor(opt = {}) {
-    this._renderer = opt.renderer;
     this.isPlaying = false;
     this.playlist = playlist;
-    this._currentTrack = null;
-    this._currentTrackTags = null;
+
+    this._currentTrack = defaultCurrentTrackData;
+    this._nowPlayingData = defaultNowPlayingData;
 
     this._webAudioPlayer = null;
     this._webAudioUtil = null;
-    this._audioLoaded = false;
     this._tagDuration = 1;
     this.numFrequencyBins = 64;
-
-    this._nowPlayingData = defaultNowPlayingData;
-
-    this._loadTrack(playlist[0]);
   }
 
   async _loadTrack(track) {
@@ -71,23 +77,66 @@ class AudioPlayer {
     return fetch(`assets/music-tags/${track.id}.json`)
       .then((response) => response.json())
       .then((data) => {
-        this._currentTrackTags = data;
+        this._preprocessTrackTags(data);
       });
   }
 
   _loadMP3() {
     return new Promise((resolve, reject) => {
       this._webAudioPlayer.on("load", () => {
-        this._audioLoaded = true;
-
         this._webAudioPlayer.node.connect(
           this._webAudioPlayer.context.destination
         );
-        this._nowPlayingData.title = this._currentTrack.title;
-        this._nowPlayingData.artist = this._currentTrack.artist;
         resolve();
       });
     });
+  }
+
+  _preprocessTrackTags(rawTags) {
+    const tagConfidenceThreshold = 0.05;
+
+    this._currentTrack.tags = [];
+    this._currentTrack.topGenres = [];
+    this._currentTrack.topGenresColors = [];
+
+    for (let i = 0; i < rawTags[genreTags[0].title].length; i++) {
+      const currentTags = objectMap(rawTags, (tagList) => tagList[i]);
+
+      // Get all genre tags and sort according to value
+      const currentGenres = genreTags.map((genre) => ({
+        ...genre,
+        value: currentTags[genre.title],
+      }));
+      currentGenres.sort(compareGenres);
+
+      // Top genres data
+      const topGenres = currentGenres.slice(0, 5);
+      const genreSum = topGenres.reduce((sum, genre) => ({
+        value:
+          genre.value > tagConfidenceThreshold
+            ? sum.value + genre.value
+            : sum.value,
+      })).value;
+
+      let colors = [];
+      let weights = [];
+      topGenres.forEach((genre, i) => {
+        const weight =
+          genre.value > tagConfidenceThreshold ? genre.value / genreSum : 0;
+        genre.weight = weight;
+        colors.push(genre.color);
+        weights.push(weight);
+      });
+      const topGenresColor = chroma.average(colors, "lab", weights).hex();
+
+      this._currentTrack.tags[i] = currentTags;
+      this._currentTrack.topGenres[i] = topGenres;
+      this._currentTrack.topGenresColors[i] = topGenresColor;
+    }
+  }
+
+  getTrackColors() {
+    return this._currentTrack.topGenresColors;
   }
 
   play() {
@@ -102,8 +151,8 @@ class AudioPlayer {
 
   seek(percentage) {}
 
-  switchTrack(trackId) {
-    this.pause();
+  setTrack(trackId) {
+    if (this.isPlaying) this.pause();
     const track = this.playlist.find((track) => track.id === trackId);
     return this._loadTrack(track);
   }
@@ -152,53 +201,21 @@ class AudioPlayer {
   }
 
   getNowPlayingData() {
-    const currentTime = this._webAudioPlayer.currentTime; // In seconds
+    const currentTime =
+      this._webAudioPlayer && this._webAudioPlayer.currentTime; // In seconds
 
-    // Update data up to once per second
-    if (
-      this.isPlaying &&
-      Math.floor(currentTime) != Math.floor(this._nowPlayingData.currentTime)
-    ) {
-      const currentTagsIndex = Math.floor(currentTime / this._tagDuration);
-      const currentTags = objectMap(
-        this._currentTrackTags,
-        (tagList) => tagList[currentTagsIndex]
-      );
+    const currentTagsIndex = Math.floor(currentTime / this._tagDuration);
 
-      // Get all genre tags and sort according to value
-      const currentGenres = genreTags.map((genre) => ({
-        ...genre,
-        value: currentTags[genre.title],
-      }));
+    this._nowPlayingData = {
+      title: this._currentTrack.title,
+      artist: this._currentTrack.artist,
+      tags: this._currentTrack.tags[currentTagsIndex],
+      topGenres: this._currentTrack.topGenres[currentTagsIndex],
+      topGenresColor: this._currentTrack.topGenresColors[currentTagsIndex],
+      currentTime,
+      duration: this._webAudioPlayer.duration,
+    };
 
-      currentGenres.sort(compareGenres);
-
-      // Top genres data
-      const topGenres = currentGenres.slice(0, 5);
-      const genreSum = topGenres.reduce((sum, genre) => ({
-        value: sum.value + genre.value,
-      })).value;
-
-      let colors = [];
-      let weights = [];
-      topGenres.forEach((genre, i) => {
-        const weight = genre.value / genreSum;
-        genre.weight = weight;
-        colors.push(genre.color);
-        weights.push(weight);
-      });
-      const topGenresColor = chroma.average(colors, "lab", weights).hex();
-
-      this._nowPlayingData = {
-        title: this._currentTrack.title,
-        artist: this._currentTrack.artist,
-        tags: currentTags,
-        topGenres,
-        topGenresColor,
-        currentTime,
-        duration: this._webAudioPlayer.duration,
-      };
-    }
     return this._nowPlayingData;
   }
 }
