@@ -1,9 +1,21 @@
 const { gui, webgl, assets, player } = require("../../context");
 
 const LiveShaderMaterial = require("../materials/LiveShaderMaterial");
+import { MeshLine, MeshLineMaterial, MeshLineRaycast } from "three.meshline";
 const Particles = require("./Particles");
 const animate = require("@jam3/gsap-promise");
 const chroma = require("chroma-js");
+
+function getPointOnSphere(radius) {
+  var u = Math.random();
+  var v = Math.random();
+  var theta = 2 * Math.PI * u;
+  var phi = Math.acos(2 * v - 1);
+  var x = radius * Math.sin(phi) * Math.cos(theta);
+  var y = radius * Math.sin(phi) * Math.sin(theta);
+  var z = radius * Math.cos(phi);
+  return [x, y, z];
+}
 
 module.exports = class MuserVisualizer extends THREE.Object3D {
   constructor() {
@@ -12,14 +24,27 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     // Visualization properties
     this.visualizationWidth = 2.5;
     this.createdMeshes = false;
-    this.barMeshes = [];
     this.prevBG = "#ffffff";
     this.currBG = "#ffffff";
     this.particlesBass = null;
     this.particlesMid = null;
     this.particlesTreble = null;
 
+    this.lineMeshes = [];
+    this.lineMaterial = new MeshLineMaterial({
+      useMap: false,
+      color: "#000000",
+      opacity: 1,
+      resolution: new THREE.Vector2(webgl.width, webgl.height),
+      sizeAttenuation: false,
+      lineWidth: 10,
+      transparent: true,
+      depthTest: false,
+    });
+
     this.children = [];
+
+    window.addEventListener("resize", () => this.onWindowResize());
 
     if (gui) {
       // assume it can be falsey, e.g. if we strip dat-gui out of bundle
@@ -29,54 +54,42 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     }
   }
 
-  createFrequencyMeshes() {
-    const totalWidth = this.visualizationWidth;
-    const barSize = totalWidth / (2 * player.numFrequencyBins);
-    for (let i = 0; i < player.numFrequencyBins; i++) {
-      const geometry = new THREE.BoxGeometry(barSize, 1, barSize);
-      const material = new THREE.MeshLambertMaterial();
-      const bar = new THREE.Mesh(geometry, material);
-      bar.translateX(2 * i * barSize - 0.5 * totalWidth);
-      bar.translateY(0.6);
-
-      this.barMeshes.push(bar);
-      this.add(bar);
-    }
-  }
-
   createParticles() {
-    this.particlesBass = new Particles(8, 1.3);
-    this.particlesMid = new Particles(14, 2);
-    this.particlesTreble = new Particles(400, 3);
-
-    this.particlesBass.material.uniforms.uColor.value = new THREE.Vector4(
-      0,
-      0,
-      0,
-      0.8
-    );
-    this.particlesMid.material.uniforms.uColor.value = new THREE.Vector4(
-      0,
-      0,
-      0,
-      0.5
-    );
-    this.particlesTreble.material.uniforms.uColor.value = new THREE.Vector4(
-      1,
-      1,
-      1,
-      0.5
-    );
+    this.particlesBass = new Particles(7, 1.5);
+    this.particlesMid = new Particles(14, 2.5);
+    this.particlesTreble = new Particles(100, 3.5);
 
     this.add(this.particlesBass);
     this.add(this.particlesMid);
     this.add(this.particlesTreble);
   }
 
+  createLines() {
+    const radius = 2;
+    const numLines = 10;
+
+    for (var i = 0; i < numLines; i++) {
+      const points = [];
+      points.push(...getPointOnSphere(radius));
+      points.push(...getPointOnSphere(radius));
+      const line = new MeshLine();
+      line.setPoints(points);
+
+      const meshLine = new THREE.Mesh(line, this.lineMaterial);
+      this.add(meshLine);
+      this.lineMeshes.push(meshLine);
+    }
+  }
+
+  onWindowResize() {
+    this.lineMaterial.resolution = new THREE.Vector2(webgl.width, webgl.height);
+  }
+
   onAppDidUpdate(oldProps, oldState, newProps, newState) {
     if (!this.createdMeshes) {
       // this.createFrequencyMeshes();
       this.createParticles();
+      this.createLines();
       this.createdMeshes = true;
     }
   }
@@ -96,22 +109,6 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
       } = player.getCurrentFrequencyData();
       const nowPlayingData = player.getNowPlayingData();
 
-      // Edit scene
-      // frequencies.forEach((item, i) => {
-      //   this.barMeshes[i].scale.y = item ? item * 0.005 : 0.001;
-      // });
-
-      this.particlesBass.material.uniforms.uSize.value =
-        0.3 + 0.3 * (bass.average / 255);
-
-      this.particlesMid.material.uniforms.uSize.value =
-        0.1 + 0.1 * (mid.average / 255);
-
-      this.particlesTreble.material.uniforms.uSize.value =
-        0.01 + 0.05 * (treble.average / 255);
-
-      // console.log(total.average / 255);
-
       const topGenresColor = nowPlayingData.topGenresColor;
 
       // Interpolate background color from the previous second
@@ -129,25 +126,25 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
       // const bgColor = genreColor.brighten((2 * bass.average) / 255);
 
       webgl.renderer.setClearColor(genreColor.hex(), 1);
+
+      // Particles
+      this.particlesBass.material.uniforms.uSize.value =
+        0.3 + 0.35 * (bass.average / 255);
+      this.particlesBass.material.uniforms.uColor.value = new THREE.Vector4(
+        ...genreColor.darken(1).alpha(0.8).gl()
+      );
+
+      this.particlesMid.material.uniforms.uSize.value =
+        0.1 + 0.1 * (mid.average / 255);
+      this.particlesMid.material.uniforms.uColor.value = new THREE.Vector4(
+        ...genreColor.darken(2.5).alpha(0.7).gl()
+      );
+
+      this.particlesTreble.material.uniforms.uSize.value =
+        0.01 + 0.05 * (treble.average / 255);
+      this.particlesTreble.material.uniforms.uColor.value = new THREE.Vector4(
+        ...genreColor.brighten(2).alpha(0.9).gl()
+      );
     }
   }
-
-  onTouchStart(ev, pos) {
-    const [x, y] = pos;
-    console.log("Touchstart / mousedown: (%d, %d)", x, y);
-
-    // For example, raycasting is easy:
-    const coords = new THREE.Vector2().set(
-      (pos[0] / webgl.width) * 2 - 1,
-      (-pos[1] / webgl.height) * 2 + 1
-    );
-    const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(coords, webgl.camera);
-    const hits = raycaster.intersectObject(this, true);
-    console.log(hits.length > 0 ? `Hit ${hits[0].object.name}!` : "No hit");
-  }
-
-  onTouchMove(ev, pos) {}
-
-  onTouchEnd(ev, pos) {}
 };

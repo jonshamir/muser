@@ -1,6 +1,22 @@
 const { gui, webgl, assets } = require("../../context");
 const particleShader = require("../shaders/particle.shader");
 
+function getPointInSphere() {
+  var u = Math.random();
+  var v = Math.random();
+  var theta = u * 2.0 * Math.PI;
+  var phi = Math.acos(2.0 * v - 1.0);
+  var r = Math.cbrt(Math.random());
+  var sinTheta = Math.sin(theta);
+  var cosTheta = Math.cos(theta);
+  var sinPhi = Math.sin(phi);
+  var cosPhi = Math.cos(phi);
+  var x = r * sinPhi * cosTheta;
+  var y = r * sinPhi * sinTheta;
+  var z = r * cosPhi;
+  return { x: x, y: y, z: z };
+}
+
 module.exports = class Particles extends THREE.Mesh {
   constructor(numParticles, radius) {
     super();
@@ -16,7 +32,7 @@ module.exports = class Particles extends THREE.Mesh {
     positions.setXYZ(1, 0.5, 0.5, 0.0);
     positions.setXYZ(2, -0.5, -0.5, 0.0);
     positions.setXYZ(3, 0.5, -0.5, 0.0);
-    geometry.addAttribute("position", positions);
+    geometry.setAttribute("position", positions);
 
     // uvs
     const uvs = new THREE.BufferAttribute(new Float32Array(4 * 2), 2);
@@ -24,7 +40,7 @@ module.exports = class Particles extends THREE.Mesh {
     uvs.setXYZ(1, 1.0, 0.0);
     uvs.setXYZ(2, 0.0, 1.0);
     uvs.setXYZ(3, 1.0, 1.0);
-    geometry.addAttribute("uv", uvs);
+    geometry.setAttribute("uv", uvs);
 
     // index
     geometry.setIndex(
@@ -36,24 +52,25 @@ module.exports = class Particles extends THREE.Mesh {
     const angles = new Float32Array(this.numParticles);
 
     for (let i = 0; i < this.numParticles; i++) {
-      offsets[i * 3 + 0] = this.radius * (Math.random() * 2 - 1);
-      offsets[i * 3 + 1] = this.radius * (Math.random() * 2 - 1);
-      offsets[i * 3 + 2] = this.radius * (Math.random() * 2 - 1);
+      const pos = getPointInSphere();
+      offsets[i * 3 + 0] = this.radius * pos.x;
+      offsets[i * 3 + 1] = this.radius * pos.y;
+      offsets[i * 3 + 2] = this.radius * pos.z;
 
       indices[i] = i;
 
       angles[i] = Math.random() * Math.PI;
     }
 
-    geometry.addAttribute(
+    geometry.setAttribute(
       "pindex",
       new THREE.InstancedBufferAttribute(indices, 1, false)
     );
-    geometry.addAttribute(
+    geometry.setAttribute(
       "offset",
       new THREE.InstancedBufferAttribute(offsets, 3, false)
     );
-    geometry.addAttribute(
+    geometry.setAttribute(
       "angle",
       new THREE.InstancedBufferAttribute(angles, 1, false)
     );

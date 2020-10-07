@@ -4,7 +4,6 @@ varying vec2 vUv;
 varying vec4 vColor;
 
 void main() {
-	vec4 color = vec4(0.0);
 	vec2 uv = vUv;
 
 	// circle
@@ -14,7 +13,7 @@ void main() {
 	float t = step(0.0, dist);
 
 	// final color
-	color = vec4(vColor.xyz, vColor.w*t);
+	vec4 color = vec4(vColor.xyz, vColor.w*t);
 
 	gl_FragColor = color;
 }
