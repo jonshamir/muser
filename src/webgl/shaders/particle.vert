@@ -10,6 +10,7 @@ uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 
 uniform float uTime;
+uniform float uTimeScale;
 uniform float uRandom;
 uniform float uDepth;
 uniform float uSize;
@@ -18,14 +19,14 @@ uniform vec4 uColor;
 varying vec2 vUv;
 varying vec4 vColor;
 
-#pragma glslify: snoise_1_2 = require(glsl-noise/simplex/2d)
+#pragma glslify: snoise3 = require(glsl-noise/simplex/3d)
 
-float rand1(float n) {
-	return fract(sin(n) * 43758.5453123);
+float rand(float n, float alpha) {
+	return fract(sin(n) * alpha);
 }
 
-float rand2(float n) {
-	return fract(sin(n) * 23718.5253123);
+float fadeInOut(float t) {
+	return -pow((2.0 * (t - 0.5)), 6.0) + 1.0;
 }
 
 vec3 rgb2hsv(vec3 c)
@@ -49,27 +50,26 @@ vec3 hsv2rgb(vec3 c)
 void main() {
 	vUv = uv;
 
-	// Randomise color
-	float randFloat1 = 2.0 * (rand1(pindex) - 0.5); // [-1,1] random
-	float randFloat2 = 2.0 * (rand2(pindex) - 0.5); // [-1,1] random
+	// Generate random numbers [-1,1]
+	float rand1 = 2.0 * (rand(pindex, 43758.5453123) - 0.5);
+	float rand2 = 2.0 * (rand(pindex, 23718.5253123) - 0.5);
+	float rand3 = 2.0 * (rand(pindex, 11218.5153123) - 0.5);
 
+	// Animation timer from 0 to 1
+	float t = mod(rand1 + 0.05 * uTime * uTimeScale, 1.0);
+
+	// Randomise color
 	vec3 colorHSV = rgb2hsv(uColor.xyz);
-	colorHSV[0] = mod(colorHSV[0] + 0.03 * randFloat1, 1.0); // hue
-	colorHSV[2] = clamp(colorHSV[2] + 0.1 * randFloat2, 0.0, 1.0); // value (brightness)
+	colorHSV[0] = mod(colorHSV[0] + 0.03 * rand1, 1.0); // hue
+	colorHSV[2] = clamp(colorHSV[2] + 0.1 * rand2, 0.0, 1.0); // value (brightness)
 	vColor = vec4(hsv2rgb(colorHSV), uColor.w);
 
 	// displacement
 	vec3 displaced = offset;
-	// randomise
-	// displaced.xy += vec2(rand1(pindex) - 0.5, rand1(offset.x + pindex) - 0.5) * uRandom;
-	// float rndz = (rand1(pindex) + snoise_1_2(vec2(pindex * 0.1, uTime * 0.1)));
-	// displaced.z += rndz * (rand1(pindex) * 2.0 * uDepth);
+	displaced += t * normalize(vec3(rand1, rand2, rand3));
 
 	// particle size
-	float psize = (snoise_1_2(vec2(0.5*uTime, pindex) * 0.5) + 2.0);
-	psize = uSize*(1.0 + rand2(pindex));
-
-
+	float psize = fadeInOut(t) * uSize * (1.0 + (0.5 + 0.5 * rand2));
 
 	// final position
 	vec4 mvPosition = modelViewMatrix * vec4(displaced, 1.0);

@@ -55,9 +55,9 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
   }
 
   createParticles() {
-    this.particlesBass = new Particles(7, 1.5);
-    this.particlesMid = new Particles(14, 2.5);
-    this.particlesTreble = new Particles(100, 3.5);
+    this.particlesBass = new Particles(8, 1.2);
+    this.particlesMid = new Particles(14, 2.0, 0.8);
+    this.particlesTreble = new Particles(100, 3.5, 3);
 
     this.add(this.particlesBass);
     this.add(this.particlesMid);
@@ -95,8 +95,6 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
   }
 
   update(dt = 0, time = 0) {
-    this.rotation.y += dt * 0.1;
-
     if (player.isPlaying) {
       // Get data
       const {
@@ -146,5 +144,7 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
         ...genreColor.brighten(2).alpha(0.9).gl()
       );
     }
+    // Rotate all the scene
+    this.rotation.y += dt * 0.1;
   }
 };

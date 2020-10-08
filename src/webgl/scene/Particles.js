@@ -18,7 +18,7 @@ function getPointInSphere() {
 }
 
 module.exports = class Particles extends THREE.Mesh {
-  constructor(numParticles, radius) {
+  constructor(numParticles, radius, timeScale = 0) {
     super();
 
     this.numParticles = numParticles;
@@ -77,6 +77,7 @@ module.exports = class Particles extends THREE.Mesh {
 
     const uniforms = {
       uTime: { value: 0 },
+      uTimeScale: { value: timeScale },
       uRandom: { value: 1.0 },
       uDepth: { value: 2.0 },
       uSize: { value: 0.1 },
