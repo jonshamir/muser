@@ -34,6 +34,7 @@ class MuserUI extends BaseComponent {
       nowPlaying: player.getNowPlayingData(),
       currentTime: 0,
       trackColors: ["#000000"],
+      currentTrackId: 0,
     };
 
     this.hideControlsTimer = null;
@@ -102,11 +103,10 @@ class MuserUI extends BaseComponent {
     });
   };
 
-  handleSelectTrack = ({ target }) => {
-    this.setTrack(target.value);
-  };
-
   setTrack = (trackId) => {
+    this.setState({
+      currentTrackId: trackId,
+    });
     player.setTrack(trackId).then(() => {
       this.setState({
         isPlaying: false,
@@ -146,8 +146,9 @@ class MuserUI extends BaseComponent {
       >
         <div class="playlist">
           <TrackSelector
+            value={this.state.currentTrackId}
             tracks={player.playlist}
-            onChange={this.handleSelectTrack}
+            onChange={(trackId) => this.setTrack(trackId)}
           />
         </div>
         <div class="ui-wrapper">
