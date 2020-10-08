@@ -8,7 +8,6 @@ const { player } = require("../../context");
 
 const Button = require("../../components/Button/Button");
 const IconButton = require("../../components/IconButton/IconButton");
-const Header = require("../../components/Header/Header");
 const GenreGraph = require("../../components/GenreGraph/GenreGraph");
 const SeekBar = require("../../components/SeekBar/SeekBar");
 const TrackSelector = require("../../components/TrackSelector/TrackSelector");
@@ -67,11 +66,11 @@ class MuserUI extends BaseComponent {
   }
 
   animateIn() {
-    return Promise.all([this.header.animateIn({ delay: 0.25 })]);
+    // return Promise.all([this.header.animateIn({ delay: 0.25 })]);
   }
 
   animateOut() {
-    return Promise.all([this.header.animateOut()]);
+    // return Promise.all([this.header.animateOut()]);
   }
 
   hideControls() {
@@ -145,13 +144,6 @@ class MuserUI extends BaseComponent {
           this.container = c;
         }}
       >
-        <Header
-          ref={(c) => {
-            this.header = c;
-          }}
-        >
-          Muser
-        </Header>
         <div class="playlist">
           <TrackSelector
             tracks={player.playlist}

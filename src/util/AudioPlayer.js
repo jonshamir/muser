@@ -49,6 +49,7 @@ class AudioPlayer {
     this.isPlaying = false;
     this.playlist = playlist;
 
+    this._trackLoaded = false;
     this._currentTrack = defaultCurrentTrackData;
     this._nowPlayingData = defaultNowPlayingData;
 
@@ -77,6 +78,7 @@ class AudioPlayer {
     return fetch(`assets/music-tags/${track.id}.json`)
       .then((response) => response.json())
       .then((data) => {
+        this._trackLoaded = true;
         this._preprocessTrackTags(data);
       });
   }
@@ -152,6 +154,7 @@ class AudioPlayer {
   seek(percentage) {}
 
   setTrack(trackId) {
+    this._trackLoaded = false;
     if (this.isPlaying) this.pause();
     const track = this.playlist.find((track) => track.id === trackId);
     return this._loadTrack(track);
@@ -201,6 +204,8 @@ class AudioPlayer {
   }
 
   getNowPlayingData() {
+    if (!this._trackLoaded) return defaultNowPlayingData;
+
     const currentTime =
       this._webAudioPlayer && this._webAudioPlayer.currentTime; // In seconds
 

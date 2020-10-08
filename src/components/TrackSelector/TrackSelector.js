@@ -1,16 +1,45 @@
 /** @jsx h */
-const { h } = require("preact");
+const { h, Component } = require("preact");
+const BaseComponent = require("../../components/BaseComponent/BaseComponent");
+const classnames = require("classnames");
 
-const TrackSelector = ({ children, ...props }) => (
-  <div class="TrackSelector">
-    <select onChange={props.onChange}>
-      {props.tracks.map((track) => (
-        <option key={track.id} value={track.id}>
-          {track.title}
-        </option>
-      ))}
-    </select>
-  </div>
-);
+class TrackSelector extends BaseComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  handleChange(e) {
+    this.props.onChange(e);
+    this.dropdown.blur();
+  }
+
+  render() {
+    const classes = classnames({
+      TrackSelector: true,
+    });
+
+    return (
+      <div className={classes}>
+        <select
+          onChange={(e) => this.handleChange(e)}
+          ref={(c) => {
+            this.dropdown = c;
+          }}
+        >
+          {this.props.tracks.map((track) => (
+            <option key={track.id} value={track.id}>
+              {track.title}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+}
+
+TrackSelector.defaultProps = {
+  onClick: () => {},
+};
 
 module.exports = TrackSelector;
