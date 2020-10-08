@@ -24,8 +24,8 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     // Visualization properties
     this.visualizationWidth = 2.5;
     this.createdMeshes = false;
-    this.prevBG = "#ffffff";
-    this.currBG = "#ffffff";
+    this.prevBG = "#888888";
+    this.currBG = "#888888";
     this.particlesBass = null;
     this.particlesMid = null;
     this.particlesTreble = null;
@@ -54,10 +54,27 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     }
   }
 
+  onWindowResize() {
+    this.lineMaterial.resolution = new THREE.Vector2(webgl.width, webgl.height);
+  }
+
+  onAppDidUpdate(oldProps, oldState, newProps, newState) {
+    if (!this.createdMeshes) {
+      this.setupScene();
+      this.createdMeshes = true;
+    }
+  }
+
+  setupScene() {
+    this.createParticles();
+    this.createLines();
+    this.updateScene();
+  }
+
   createParticles() {
     this.particlesBass = new Particles(8, 1.2);
-    this.particlesMid = new Particles(14, 2.0, 0.8);
-    this.particlesTreble = new Particles(100, 3.5, 3);
+    this.particlesMid = new Particles(14, 2, 0.8);
+    this.particlesTreble = new Particles(100, 3, 3);
 
     this.add(this.particlesBass);
     this.add(this.particlesMid);
@@ -81,70 +98,56 @@ module.exports = class MuserVisualizer extends THREE.Object3D {
     }
   }
 
-  onWindowResize() {
-    this.lineMaterial.resolution = new THREE.Vector2(webgl.width, webgl.height);
-  }
-
-  onAppDidUpdate(oldProps, oldState, newProps, newState) {
-    if (!this.createdMeshes) {
-      // this.createFrequencyMeshes();
-      this.createParticles();
-      this.createLines();
-      this.createdMeshes = true;
-    }
-  }
-
   update(dt = 0, time = 0) {
-    if (player.isPlaying) {
-      // Get data
-      const {
-        frequencies,
-        total,
-        bass,
-        mid,
-        treble,
-        high,
-      } = player.getCurrentFrequencyData();
-      const nowPlayingData = player.getNowPlayingData();
-
-      const topGenresColor = nowPlayingData.topGenresColor;
-
-      // Interpolate background color from the previous second
-      if (topGenresColor != this.currBG) {
-        this.prevBG = this.currBG;
-        this.currBG = topGenresColor;
-      }
-
-      const a = player.getCurrentTime() % 1;
-      const genreColor = chroma.average([this.prevBG, this.currBG], "lab", [
-        1 - a,
-        a,
-      ]);
-
-      // const bgColor = genreColor.brighten((2 * bass.average) / 255);
-
-      webgl.renderer.setClearColor(genreColor.hex(), 1);
-
-      // Particles
-      this.particlesBass.material.uniforms.uSize.value =
-        0.3 + 0.35 * (bass.average / 255);
-      this.particlesBass.material.uniforms.uColor.value = new THREE.Vector4(
-        ...genreColor.darken(1).alpha(0.8).gl()
-      );
-
-      this.particlesMid.material.uniforms.uSize.value =
-        0.1 + 0.1 * (mid.average / 255);
-      this.particlesMid.material.uniforms.uColor.value = new THREE.Vector4(
-        ...genreColor.darken(2.5).alpha(0.7).gl()
-      );
-
-      this.particlesTreble.material.uniforms.uSize.value =
-        0.01 + 0.05 * (treble.average / 255);
-      this.particlesTreble.material.uniforms.uColor.value = new THREE.Vector4(
-        ...genreColor.brighten(2).alpha(0.9).gl()
-      );
-    }
-    // Rotate all the scene
+    if (player.isPlaying) this.updateScene();
     this.rotation.y += dt * 0.1;
+  }
+
+  updateScene() {
+    // Get data
+    const {
+      frequencies,
+      total,
+      bass,
+      mid,
+      treble,
+      high,
+    } = player.getCurrentFrequencyData();
+    const nowPlayingData = player.getNowPlayingData();
+
+    const topGenresColor = nowPlayingData.topGenresColor;
+
+    // Interpolate background color from the previous second
+    if (topGenresColor != this.currBG) {
+      this.prevBG = this.currBG;
+      this.currBG = topGenresColor;
+    }
+
+    const a = player.getCurrentTime() % 1;
+    const genreColor = chroma.average([this.prevBG, this.currBG], "lab", [
+      1 - a,
+      a,
+    ]);
+
+    webgl.renderer.setClearColor(genreColor.hex(), 1);
+
+    // Particles
+    this.particlesBass.material.uniforms.uSize.value =
+      0.3 + 0.35 * (bass.average / 255);
+    this.particlesBass.material.uniforms.uColor.value = new THREE.Vector4(
+      ...genreColor.darken(1).alpha(0.8).gl()
+    );
+
+    this.particlesMid.material.uniforms.uSize.value =
+      0.1 + 0.1 * (mid.average / 255);
+    this.particlesMid.material.uniforms.uColor.value = new THREE.Vector4(
+      ...genreColor.darken(2.5).alpha(0.7).gl()
+    );
+
+    this.particlesTreble.material.uniforms.uSize.value =
+      0.01 + 0.05 * (treble.average / 255);
+    this.particlesTreble.material.uniforms.uColor.value = new THREE.Vector4(
+      ...genreColor.brighten(2).alpha(0.9).gl()
+    );
   }
 };

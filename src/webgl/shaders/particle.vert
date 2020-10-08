@@ -54,6 +54,7 @@ void main() {
 	float rand1 = 2.0 * (rand(pindex, 43758.5453123) - 0.5);
 	float rand2 = 2.0 * (rand(pindex, 23718.5253123) - 0.5);
 	float rand3 = 2.0 * (rand(pindex, 11218.5153123) - 0.5);
+	float rand4 = 2.0 * (rand(pindex, 72310.2413133) - 0.5);
 
 	// Animation timer from 0 to 1
 	float t = mod(rand1 + 0.05 * uTime * uTimeScale, 1.0);
@@ -66,7 +67,7 @@ void main() {
 
 	// displacement
 	vec3 displaced = offset;
-	displaced += t * normalize(vec3(rand1, rand2, rand3));
+	displaced += rand4 * t * normalize(vec3(rand1, rand2, rand3));
 
 	// particle size
 	float psize = fadeInOut(t) * uSize * (1.0 + (0.5 + 0.5 * rand2));

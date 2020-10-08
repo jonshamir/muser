@@ -31,7 +31,7 @@ class MuserUI extends BaseComponent {
       isDashboardOpen: false,
       areControlsHidden: false,
       isPlaying: false,
-      nowPlaying: player.getDefaultNowPlayingData(),
+      nowPlaying: player.getNowPlayingData(),
       currentTime: 0,
       trackColors: ["#000000"],
     };

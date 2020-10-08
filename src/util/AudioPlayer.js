@@ -39,9 +39,24 @@ const defaultNowPlayingData = {
     { title: "-", color: "#000", weight: 0 },
     { title: "-", color: "#000", weight: 0 },
   ],
-  topGenresColor: "#ffffff",
+  topGenresColor: "#888888",
   currentTime: -1,
   duration: 0,
+};
+
+const defaultSpectrumData = {
+  average: 0,
+  max: 0,
+  min: 0,
+};
+
+const defaultFrequencyPlayingData = {
+  frequencies: [],
+  total: defaultSpectrumData,
+  bass: defaultSpectrumData,
+  mid: defaultSpectrumData,
+  treble: defaultSpectrumData,
+  high: defaultSpectrumData,
 };
 
 class AudioPlayer {
@@ -161,10 +176,13 @@ class AudioPlayer {
   }
 
   getCurrentTime() {
+    if (!this._trackLoaded) return 0;
     return this._webAudioPlayer.currentTime;
   }
 
   getCurrentFrequencyData() {
+    if (!this._trackLoaded) return defaultFrequencyPlayingData;
+
     const frequencies = this._webAudioUtil.frequencies();
     const waveform = this._webAudioUtil.waveform();
 
@@ -197,10 +215,6 @@ class AudioPlayer {
     };
 
     return data;
-  }
-
-  getDefaultNowPlayingData() {
-    return defaultNowPlayingData;
   }
 
   getNowPlayingData() {
