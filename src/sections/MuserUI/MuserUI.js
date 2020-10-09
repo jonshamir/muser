@@ -144,15 +144,23 @@ class MuserUI extends BaseComponent {
           this.container = c;
         }}
       >
-        <div class="playlist">
+        <div className="playlist">
           <TrackSelector
             value={this.state.currentTrackId}
             tracks={player.playlist}
             onChange={(trackId) => this.setTrack(trackId)}
           />
         </div>
-        <div class="ui-wrapper">
-          <div class="controls">
+        {/*<div className="welcome">
+          <h2>Welcome to Muser</h2>
+          <p>
+            Muser is a smart music visualizer. For each second, Muser uses a
+            neural network to identify which genres and creates a color palette
+            accordingly.
+          </p>
+        </div>*/}
+        <div className="ui-wrapper">
+          <div className="controls">
             <Button
               onClick={this.handleToggleAudio}
               ref={(c) => {
@@ -160,23 +168,23 @@ class MuserUI extends BaseComponent {
               }}
             >
               {isPlaying ? (
-                <i class="material-icons">pause</i>
+                <i className="material-icons">pause</i>
               ) : (
-                <i class="material-icons">play_arrow</i>
+                <i className="material-icons">play_arrow</i>
               )}
             </Button>
-            <div class="songInfo">
+            <div className="songInfo">
               <strong>{nowPlaying.title}</strong>
               <br />
               {nowPlaying.artist}
             </div>
 
-            <div class="currentTime">
+            <div className="currentTime">
               {formatTime(nowPlaying.currentTime)} /{" "}
               {formatTime(nowPlaying.duration)}
             </div>
             <IconButton onClick={this.handleToggleDashboard}>
-              <i class="material-icons">
+              <i className="material-icons">
                 {this.state.isDashboardOpen
                   ? "insert_chart"
                   : "insert_chart_outlined"}

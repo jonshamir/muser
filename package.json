@@ -83,8 +83,7 @@
     "bundle:js": "node tools/bundler.js | uglifyjs -m -c warnings=false > app/bundle.js",
     "bundle:css": "node tools/style.js",
     "bundle": "cross-env NODE_ENV=production npm-run-all bundle:js bundle:css",
-    "deploy:upload": "surge -p app/ -d test-webgl-preact.surge.sh",
-    "deploy": "npm run bundle && npm run deploy:upload"
+    "deploy": "git push origin :gh-pages && git subtree push --prefix app origin gh-pages"
   },
   "glslify": {
     "transform": [

@@ -6,7 +6,7 @@ import matplotlib.gridspec as gridspec
 
 from musicnn.extractor import extractor
 
-file_name = 'brothers'
+file_name = 'sabotage'
 input_path = 'app/assets/music/' + file_name + '.mp3'
 output_path = 'app/assets/music-tags/' + file_name + '.json'
 
