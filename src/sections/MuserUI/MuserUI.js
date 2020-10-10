@@ -140,6 +140,11 @@ class MuserUI extends BaseComponent {
       hidden: this.state.areControlsHidden,
     });
 
+    const loaderClasses = classnames({
+      loader: true,
+      hidden: !this.state.isLoading,
+    });
+
     const { nowPlaying, currentTime, isPlaying, trackColors } = this.state;
 
     return (
@@ -156,11 +161,10 @@ class MuserUI extends BaseComponent {
             onChange={(trackId) => this.setTrack(trackId)}
           />
         </div>
-        {this.state.isLoading && (
-          <div className="loader">
-            <Spinner />
-          </div>
-        )}
+        <div className={loaderClasses}>
+          <Spinner />
+        </div>
+
         {/*<div className="welcome">
           <h2>Welcome to Muser</h2>
           <p>
