@@ -50,6 +50,7 @@ class MuserUI extends BaseComponent {
 
     window.addEventListener("keydown", (key) => this.handleKeyDown(key));
     window.addEventListener("mousemove", () => this.resetHideControlsTimer());
+    window.addEventListener("touchmove", () => this.resetHideControlsTimer());
 
     this.setTrack(player.playlist[0].id);
   }

@@ -2,6 +2,7 @@
   .interactive;
   .noselect;
   font-family: "Fira Sans", sans-serif;
+  width: 100%;
 
   .dropdownArrow {
     transition: all 200ms @easeOutCubic;
@@ -19,7 +20,8 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    width: 300px;
+    max-width: 300px;
+    box-sizing: border-box;
 
     .dropdownTitle {
       flex-grow: 1;
@@ -33,6 +35,8 @@
 
   .optionContainer {
     background-color: rgba(255, 255, 255, 0.7);
+    max-width: 300px;
+    box-sizing: border-box;
     border-radius: 5px;
     list-style-type: none;
     margin: 0;
