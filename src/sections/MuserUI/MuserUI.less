@@ -26,6 +26,27 @@
     }
   }
 
+  .loader {
+    background-color: rgba(255, 255, 255, 0.4);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    // transform: translate(-50%, -50%);
+    border-radius: 5px;
+    z-index: 100;
+
+    h3 {
+      margin: 0;
+      font-weight: normal;
+    }
+  }
+
   .playlist {
     z-index: 10;
     position: absolute;

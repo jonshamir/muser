@@ -131,7 +131,7 @@ class App extends BaseComponent {
 App.defaultProps = {
   // Artificially inflate preload time so
   // we can see it for demo purposes
-  fakePreloadTime: 500,
+  fakePreloadTime: 100,
   frequencyBins: 64,
   tagDuration: 1,
 };

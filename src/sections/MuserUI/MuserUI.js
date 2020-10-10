@@ -31,6 +31,7 @@ class MuserUI extends BaseComponent {
       isDashboardOpen: false,
       areControlsHidden: false,
       isPlaying: false,
+      isLoading: true,
       nowPlaying: player.getNowPlayingData(),
       currentTime: 0,
       trackColors: player.getTrackColors(),
@@ -106,10 +107,13 @@ class MuserUI extends BaseComponent {
   setTrack = (trackId) => {
     this.setState({
       currentTrackId: trackId,
+      isPlaying: false,
+      isLoading: true,
     });
     player.setTrack(trackId).then(() => {
       this.setState({
         isPlaying: false,
+        isLoading: false,
         nowPlaying: player.getNowPlayingData(),
         trackColors: player.getTrackColors(),
         currentTime: 0,
@@ -151,6 +155,11 @@ class MuserUI extends BaseComponent {
             onChange={(trackId) => this.setTrack(trackId)}
           />
         </div>
+        {this.state.isLoading && (
+          <div className="loader">
+            <h3>Loading track...</h3>
+          </div>
+        )}
         {/*<div className="welcome">
           <h2>Welcome to Muser</h2>
           <p>
