@@ -21,23 +21,23 @@ const compareGenres = (a, b) => {
 const defaultCurrentTrackData = {
   id: "",
   path: "",
-  title: "-",
-  artist: "-",
+  title: "...",
+  artist: "...",
   tags: null,
   topGenres: [],
   topGenresColors: [],
 };
 
 const defaultNowPlayingData = {
-  title: "-",
-  artist: "-",
+  title: "...",
+  artist: "...",
   tags: [],
   topGenres: [
-    { title: "-", color: "#000", weight: 0 },
-    { title: "-", color: "#000", weight: 0 },
-    { title: "-", color: "#000", weight: 0 },
-    { title: "-", color: "#000", weight: 0 },
-    { title: "-", color: "#000", weight: 0 },
+    { title: "...", color: "#000", weight: 0 },
+    { title: "...", color: "#000", weight: 0 },
+    { title: "...", color: "#000", weight: 0 },
+    { title: "...", color: "#000", weight: 0 },
+    { title: "...", color: "#000", weight: 0 },
   ],
   topGenresColor: "#888888",
   currentTime: -1,
@@ -58,6 +58,8 @@ const defaultFrequencyPlayingData = {
   treble: defaultSpectrumData,
   high: defaultSpectrumData,
 };
+
+const defaultTopGenresColors = ["#aaaaaa", "#aaaaaa"];
 
 class AudioPlayer {
   constructor(opt = {}) {
@@ -153,6 +155,7 @@ class AudioPlayer {
   }
 
   getTrackColors() {
+    if (!this._trackLoaded) return defaultTopGenresColors;
     return this._currentTrack.topGenresColors;
   }
 

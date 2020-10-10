@@ -36,7 +36,7 @@ class Preloader extends BaseComponent {
             this.header = c;
           }}
         >
-          Loading
+          Loading...
         </Header>
       </div>
     );

@@ -33,7 +33,7 @@ class MuserUI extends BaseComponent {
       isPlaying: false,
       nowPlaying: player.getNowPlayingData(),
       currentTime: 0,
-      trackColors: ["#000000"],
+      trackColors: player.getTrackColors(),
       currentTrackId: 0,
     };
 
@@ -205,9 +205,5 @@ class MuserUI extends BaseComponent {
     );
   }
 }
-
-MuserUI.defaultProps = {
-  onPlay: () => {},
-};
 
 module.exports = MuserUI;

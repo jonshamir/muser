@@ -21,6 +21,12 @@ html {
   font-size: 62.5%;
 }
 
+// Prevent text from changing size of icon tags
+.material-icons {
+  max-width: 1em;
+  overflow: hidden;
+}
+
 @import "./mixins.less";
 @import "../components/**/*.less";
 @import "../sections/**/*.less";
