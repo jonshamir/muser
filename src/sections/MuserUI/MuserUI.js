@@ -7,6 +7,7 @@ const animate = require("@jam3/gsap-promise");
 const { player } = require("../../context");
 
 const Button = require("../../components/Button/Button");
+const Spinner = require("../../components/Spinner/Spinner");
 const IconButton = require("../../components/IconButton/IconButton");
 const GenreGraph = require("../../components/GenreGraph/GenreGraph");
 const SeekBar = require("../../components/SeekBar/SeekBar");
@@ -157,7 +158,7 @@ class MuserUI extends BaseComponent {
         </div>
         {this.state.isLoading && (
           <div className="loader">
-            <h3>Loading track...</h3>
+            <Spinner />
           </div>
         )}
         {/*<div className="welcome">
