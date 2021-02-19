@@ -32,6 +32,7 @@ class MuserUI extends BaseComponent {
       isDashboardOpen: false,
       areControlsHidden: false,
       isPlaying: false,
+      isAboutOpen: true,
       isLoading: true,
       nowPlaying: player.getNowPlayingData(),
       currentTime: 0,
@@ -135,6 +136,12 @@ class MuserUI extends BaseComponent {
     this.resetHideControlsTimer();
   };
 
+  handleToggleAbout = () => {
+    this.setState({
+      isAboutOpen: !this.state.isAboutOpen,
+    });
+  };
+
   render() {
     const classes = classnames({
       Muser: true,
@@ -146,7 +153,13 @@ class MuserUI extends BaseComponent {
       hidden: !this.state.isLoading,
     });
 
-    const { nowPlaying, currentTime, isPlaying, trackColors } = this.state;
+    const {
+      nowPlaying,
+      currentTime,
+      isPlaying,
+      isAboutOpen,
+      trackColors,
+    } = this.state;
 
     return (
       <div
@@ -166,14 +179,19 @@ class MuserUI extends BaseComponent {
           <Spinner />
         </div>
 
-        {/*<div className="welcome">
-          <h2>Welcome to Muser</h2>
-          <p>
-            Muser is a smart music visualizer. For each second, Muser uses a
-            neural network to identify which genres and creates a color palette
-            accordingly.
-          </p>
-        </div>*/}
+        {isAboutOpen && (
+          <div className="about">
+            <IconButton onClick={this.handleToggleAbout} className="close">
+              <i className="material-icons">close</i>
+            </IconButton>
+            <h2>Welcome to Muser</h2>
+            <p>
+              Muser is a smart music visualizer. For each second, Muser uses a
+              neural network to identify which genres and creates a color
+              palette accordingly.
+            </p>
+          </div>
+        )}
         <div className="ui-wrapper">
           <div className="controls">
             <Button

@@ -20,18 +20,11 @@ npm run start
 Now open [localhost:9966](http://localhost:9966/).
 You can launch [localhost:9966/?gui](http://localhost:9966/?gui) to open dat.gui.
 
-For production:
+## To do
 
-```sh
-# create a production bundle.js
-npm run bundle
-
-# deploy to a surge link for demoing
-npm run deploy
-```
-
-For deploy to work, you will need to change the surge URL in `package.json` `"scripts" > "deploy"` field to something else.
-
-## License
-
-MIT, see [LICENSE.md](http://github.com/mattdesl/threejs-app/blob/master/LICENSE.md) for details.
+- Visualization
+- Add more songs
+- Seek bar functionality
+- Explanation
+- About
+- Google analytics
