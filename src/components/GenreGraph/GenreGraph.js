@@ -12,7 +12,7 @@ const GenreGraph = ({ children, isHidden, ...props }) => {
       {props.genres.map((genre) => (
         <div>
           <div className="genreTag">
-            {genre.title} {genre.value && genre.value.toFixed(2)}{" "}
+            {genre.title} {/*genre.value && genre.value.toFixed(2)*/}{" "}
             <strong>{Math.floor(genre.weight * 100)}%</strong>
           </div>
           <div

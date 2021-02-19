@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap");
 
+@mobile-width: 600px;
+
 body {
   margin: 0;
   overflow: hidden;
@@ -21,10 +23,22 @@ html {
   font-size: 62.5%;
 }
 
+a {
+  color: #2559af;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+p {
+  line-height: 1.5em;
+}
+
 // Prevent text from changing size of icon tags
 .material-icons {
   max-width: 1em;
   overflow: hidden;
+  vertical-align: bottom;
 }
 
 @import "./mixins.less";

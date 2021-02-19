@@ -12,6 +12,7 @@ const IconButton = require("../../components/IconButton/IconButton");
 const GenreGraph = require("../../components/GenreGraph/GenreGraph");
 const SeekBar = require("../../components/SeekBar/SeekBar");
 const TrackSelector = require("../../components/TrackSelector/TrackSelector");
+const AboutInfo = require("../../components/AboutInfo/AboutInfo");
 
 const formatTime = (seconds) => {
   if (seconds < 0) seconds = 0;
@@ -175,23 +176,16 @@ class MuserUI extends BaseComponent {
             onChange={(trackId) => this.setTrack(trackId)}
           />
         </div>
+        <div className="help">
+          <IconButton onClick={this.handleToggleAbout}>
+            <i className="material-icons">info</i>
+          </IconButton>
+        </div>
         <div className={loaderClasses}>
           <Spinner />
         </div>
 
-        {isAboutOpen && (
-          <div className="about">
-            <IconButton onClick={this.handleToggleAbout} className="close">
-              <i className="material-icons">close</i>
-            </IconButton>
-            <h2>Welcome to Muser</h2>
-            <p>
-              Muser is a smart music visualizer. For each second, Muser uses a
-              neural network to identify which genres and creates a color
-              palette accordingly.
-            </p>
-          </div>
-        )}
+        {isAboutOpen && <AboutInfo onClose={this.handleToggleAbout} />}
         <div className="ui-wrapper">
           <div className="controls">
             <Button

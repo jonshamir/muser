@@ -1,0 +1,111 @@
+.about {
+  background-color: rgba(230, 230, 230, 1);
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  left: 1rem;
+  right: 1rem;
+  margin: auto;
+  max-width: 600px;
+  border-radius: 5px;
+  padding: 1em;
+  z-index: 100;
+  pointer-events: auto;
+
+  .text-content {
+    max-height: 60vh;
+    overflow-y: scroll;
+  }
+
+  h2 {
+    margin: 0;
+  }
+  .close {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+  }
+
+  figure {
+    text-align: center;
+    margin: auto;
+    img {
+      width: 90%;
+      max-width: 250px;
+      margin: auto;
+    }
+    figcaption {
+      color: #666;
+      font-size: 0.8em;
+    }
+  }
+}
+
+.process-illustration {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  @media screen and (max-width: @mobile-width) {
+    flex-direction: column;
+  }
+
+  .arrow {
+    margin: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8em;
+
+    @media screen and (max-width: @mobile-width) {
+      flex-direction: row;
+      padding-left: 3.5em;
+      i {
+        transform: rotate(90deg);
+      }
+    }
+
+    span {
+      color: #666;
+    }
+  }
+
+  .waveform {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 70px;
+
+    & .bar {
+      width: 3px;
+      margin: 1px;
+      height: 10px;
+      background-color: #999;
+    }
+  }
+
+  .tags {
+    .genre-tag {
+      margin: 2px;
+      padding: 2px 4px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #666;
+
+      .color {
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+        width: 1em;
+        height: 1em;
+      }
+    }
+  }
+
+  .color {
+    border-radius: 500px;
+    width: 50px;
+    height: 50px;
+  }
+}

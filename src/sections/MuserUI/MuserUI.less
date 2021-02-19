@@ -13,28 +13,6 @@
     transition: opacity 3s ease;
   }
 
-  .about {
-    background-color: rgba(255, 255, 255, 0.8);
-    position: absolute;
-    top: 45%;
-    left: 1rem;
-    right: 1rem;
-    margin: auto;
-    max-width: 600px;
-    transform: translateY(-50%);
-    border-radius: 5px;
-    padding: 1em;
-
-    h2 {
-      margin: 0;
-    }
-    .close {
-      position: absolute;
-      top: 0.5em;
-      right: 0.5em;
-    }
-  }
-
   .loader {
     background-color: rgba(255, 255, 255, 0.6);
     position: absolute;
@@ -72,6 +50,19 @@
     box-sizing: border-box;
   }
 
+  .help {
+    z-index: 11;
+    position: absolute;
+    right: 0;
+    line-height: 1.3em;
+    padding: 0;
+    margin: 1em;
+    border-radius: 500px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
   .ui-wrapper {
     bottom: 1rem;
     left: 1rem;
@@ -80,6 +71,7 @@
     padding: 0.5em 1em;
     position: absolute;
     background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(4px);
   }
 
   .controls {

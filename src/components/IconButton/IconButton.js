@@ -17,7 +17,6 @@ class IconButton extends BaseComponent {
 
     if (this.props.className) classes += " " + this.props.className;
 
-    console.log(classes);
     return (
       <div
         onClick={this.props.onClick}
