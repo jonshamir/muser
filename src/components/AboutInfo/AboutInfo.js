@@ -109,8 +109,11 @@ const AboutInfo = ({ onClose, ...props }) => {
         </figure>
         <p>
           Ideally, music genres which are stylistically closer will get similar
-          colors. The colors for each genre were chosen according to the
-          Musicmap project.
+          colors. The colors for each genre were chosen according to the{" "}
+          <a href="https://musicmap.info/" target="_blank">
+            Musicmap project
+          </a>
+          .
         </p>
         <p>[musicmap genres image]</p>
       </div>
