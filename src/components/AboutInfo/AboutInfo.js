@@ -84,7 +84,7 @@ const AboutInfo = ({ onClose, exampleIndex, ...props }) => {
         <figure>
           <img src="assets/images/kandinsky.jpg" alt="Circles by Kandinsky" />
           <figcaption>
-            <i>Circles In A Circle</i> by Wassily Kandinsky, 1923
+            <i>Circles in a Circle</i> by Wassily Kandinsky, 1923
           </figcaption>
         </figure>
         <p>

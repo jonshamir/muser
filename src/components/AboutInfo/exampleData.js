@@ -39,33 +39,33 @@ module.exports = [
       .map((_, i) => Math.random() * 50 + 5),
     genres: [
       {
-        title: "blues",
-        color: "#1155cc",
-        weight: 0.39,
+        title: "electronic",
+        color: "#990000",
+        weight: 0.43,
       },
       {
-        title: "jazz",
-        color: "#0a5394",
-        weight: 0.25,
+        title: "hip-hop",
+        color: "#741b47",
+        weight: 0.19,
+      },
+      {
+        title: "indie",
+        color: "#f1c232",
+        weight: 0.15,
       },
 
       {
-        title: "classic rock",
+        title: "alternative",
         color: "#f1c232",
-        weight: 0.17,
+        weight: 0.14,
       },
       {
-        title: "pop",
-        color: "#b3c376",
-        weight: 0.08,
-      },
-      {
-        title: "electronic",
-        color: "#990000",
-        weight: 0.08,
+        title: "rock",
+        color: "#f1c232",
+        weight: 0.07,
       },
     ],
-    color: "#7d678b",
+    color: "#b75920",
   },
   {
     waveform: Array(16)
@@ -73,32 +73,31 @@ module.exports = [
       .map((_, i) => Math.random() * 50 + 5),
     genres: [
       {
+        title: "folk",
+        color: "#0a5394",
+        weight: 0.61,
+      },
+      {
         title: "blues",
         color: "#1155cc",
-        weight: 0.39,
+        weight: 0.14,
       },
       {
-        title: "jazz",
-        color: "#0a5394",
-        weight: 0.25,
-      },
-
-      {
-        title: "classic rock",
-        color: "#f1c232",
-        weight: 0.17,
-      },
-      {
-        title: "pop",
+        title: "country",
         color: "#b3c376",
+        weight: 0.1,
+      },
+      {
+        title: "classical",
+        color: "#888888",
         weight: 0.08,
       },
       {
-        title: "electronic",
-        color: "#990000",
-        weight: 0.08,
+        title: "indie",
+        color: "#f1c232",
+        weight: 0.05,
       },
     ],
-    color: "#7d678b",
+    color: "#456372",
   },
 ];
