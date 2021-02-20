@@ -26,6 +26,9 @@ const getTrackPercentage = (currentTime, duration) => {
   return (100 * currentTime) / duration;
 };
 
+const songDataUpdateInterval = 200;
+const aboutUpdateInterval = 1500;
+
 class MuserUI extends BaseComponent {
   constructor(props) {
     super(props);
@@ -34,6 +37,7 @@ class MuserUI extends BaseComponent {
       areControlsHidden: false,
       isPlaying: false,
       isAboutOpen: true,
+      aboutExampleIndex: 0,
       isLoading: true,
       nowPlaying: player.getNowPlayingData(),
       currentTime: 0,
@@ -45,10 +49,18 @@ class MuserUI extends BaseComponent {
   }
 
   componentDidMount() {
+    let timer = 0;
     // Update song data
     setInterval(() => {
       this.updateNowPlaying();
-    }, 200);
+      timer += songDataUpdateInterval;
+      if (timer >= aboutUpdateInterval) {
+        timer = 0;
+        this.setState({
+          aboutExampleIndex: (this.state.aboutExampleIndex + 1) % 3,
+        });
+      }
+    }, songDataUpdateInterval);
 
     window.addEventListener("keydown", (key) => this.handleKeyDown(key));
     window.addEventListener("mousemove", () => this.resetHideControlsTimer());
@@ -160,6 +172,7 @@ class MuserUI extends BaseComponent {
       isPlaying,
       isAboutOpen,
       trackColors,
+      aboutExampleIndex,
     } = this.state;
 
     return (
@@ -186,7 +199,12 @@ class MuserUI extends BaseComponent {
           <h3>Loading track data...</h3>
         </div>
 
-        {isAboutOpen && <AboutInfo onClose={this.handleToggleAbout} />}
+        {isAboutOpen && (
+          <AboutInfo
+            onClose={this.handleToggleAbout}
+            exampleIndex={aboutExampleIndex}
+          />
+        )}
         <div className="ui-wrapper">
           <div className="controls">
             <Button

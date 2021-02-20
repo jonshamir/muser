@@ -2,8 +2,10 @@
 const { h } = require("preact");
 const classnames = require("classnames");
 const IconButton = require("../../components/IconButton/IconButton");
+const GenreGraph = require("../../components/GenreGraph/GenreGraph");
+const EXAMPLE_DATA = require("./exampleData.js");
 
-const AboutInfo = ({ onClose, ...props }) => {
+const AboutInfo = ({ onClose, exampleIndex, ...props }) => {
   return (
     <div className="about">
       <IconButton onClick={onClose} className="close">
@@ -36,47 +38,25 @@ const AboutInfo = ({ onClose, ...props }) => {
         </p>
         <div className="process-illustration">
           <div className="waveform">
-            {Array(16)
-              .fill(null)
-              .map((_, i) => (
-                <div
-                  className="bar"
-                  key={i}
-                  style={{ height: Math.random() * 50 + 5 }}
-                />
-              ))}
+            {EXAMPLE_DATA[exampleIndex].waveform.map((x, i) => (
+              <div className="bar" key={i} style={{ height: x }} />
+            ))}
           </div>
           <div class="arrow">
             <i className="material-icons">east</i>
             <span>musicnn</span>
           </div>
           <div class="tags">
-            <div class="genre-tag">
-              <div class="color" style={{ backgroundColor: "#1155cc" }}></div>
-              Blues 39%
-            </div>
-            <div class="genre-tag">
-              <div class="color" style={{ backgroundColor: "#0a5394" }}></div>
-              Jazz 25%
-            </div>
-            <div class="genre-tag">
-              <div class="color" style={{ backgroundColor: "#f1c232" }}></div>
-              Classic Rock 17%
-            </div>
-            <div class="genre-tag">
-              <div class="color" style={{ backgroundColor: "#b3c376" }}></div>
-              Pop 8%
-            </div>
-            <div class="genre-tag">
-              <div class="color" style={{ backgroundColor: "#990000" }}></div>
-              Electronic 8%
-            </div>
+            <GenreGraph genres={EXAMPLE_DATA[exampleIndex].genres} />
           </div>
           <div class="arrow">
             <i className="material-icons">east</i>
             <span>average</span>
           </div>
-          <div class="color" style={{ backgroundColor: "#7d678b" }}></div>
+          <div
+            class="color"
+            style={{ backgroundColor: EXAMPLE_DATA[exampleIndex].color }}
+          ></div>
         </div>
         <p>
           The final visualization colors are based on the 5 most-fitting genres.
