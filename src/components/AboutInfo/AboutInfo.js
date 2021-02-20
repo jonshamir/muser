@@ -102,7 +102,7 @@ const AboutInfo = ({ onClose, ...props }) => {
           “visualizing” a musical composition.
         </p>
         <figure>
-          <img src="/assets/images/kandinsky.jpg" alt="Circles by Kandinsky" />
+          <img src="assets/images/kandinsky.jpg" alt="Circles by Kandinsky" />
           <figcaption>
             <i>Circles In A Circle</i> by Wassily Kandinsky, 1923
           </figcaption>

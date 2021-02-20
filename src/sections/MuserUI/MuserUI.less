@@ -14,7 +14,9 @@
   }
 
   .loader {
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    // background-color: rgba(255, 255, 255, 0.6);
     position: absolute;
     top: 0;
     left: 0;
@@ -22,9 +24,11 @@
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    flex-direction: column;
     pointer-events: auto;
     // transform: translate(-50%, -50%);
+    padding: 1.5em;
+    box-sizing: border-box;
     border-radius: 5px;
     z-index: 100;
     transition: all 300ms ease;
@@ -35,8 +39,9 @@
     }
 
     h3 {
-      margin: 0;
+      margin-top: 2em;
       font-weight: normal;
+      color: #fff;
     }
   }
 
@@ -51,7 +56,7 @@
   }
 
   .help {
-    z-index: 11;
+    z-index: 101;
     position: absolute;
     right: 0;
     line-height: 1.3em;

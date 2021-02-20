@@ -183,6 +183,7 @@ class MuserUI extends BaseComponent {
         </div>
         <div className={loaderClasses}>
           <Spinner />
+          <h3>Loading track data...</h3>
         </div>
 
         {isAboutOpen && <AboutInfo onClose={this.handleToggleAbout} />}
