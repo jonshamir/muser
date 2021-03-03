@@ -88,14 +88,20 @@ const AboutInfo = ({ onClose, exampleIndex, ...props }) => {
           </figcaption>
         </figure>
         <p>
-          Ideally, music genres which are stylistically closer will get similar
-          colors. The colors for each genre were chosen according to the{" "}
+          Colors for each genre were chosen according to the{" "}
           <a href="https://musicmap.info/" target="_blank">
             Musicmap project
-          </a>
+          </a>{" "}
+          so that music genres which are stylistically closer will get similar
+          colors.
+        </p>
+        <p>
+          The project structure is based on{" "}
+          <a href="https://github.com/mattdesl/threejs-app" target="_blank">
+            threejs-app
+          </a>{" "}
           .
         </p>
-        <p>[musicmap genres image]</p>
       </div>
     </div>
   );

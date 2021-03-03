@@ -1,21 +1,15 @@
 [
   {
-    "id": "madness",
-    "path": "assets/music/madness.mp3",
-    "title": "Madness",
-    "artist": "Muse"
+    "id": "lovin-you",
+    "path": "assets/music/lovin-you.mp3",
+    "title": "Since I've Been Loving You",
+    "artist": "Led Zeppelin"
   },
   {
-    "id": "lie",
-    "path": "assets/music/lie.mp3",
-    "title": "Love the Way You Lie",
-    "artist": "Eminem feat. Rihanna"
-  },
-  {
-    "id": "bohemian-rhapsody",
-    "path": "assets/music/bohemian-rhapsody.mp3",
-    "title": "Bohemian Rhapsody",
-    "artist": "Queen"
+    "id": "sabotage",
+    "path": "assets/music/sabotage.mp3",
+    "title": "Sabotage",
+    "artist": "Beastie Boys"
   },
   {
     "id": "stairway-to-heaven",
@@ -30,6 +24,18 @@
     "artist": "The Jimi Hendrix Experience"
   },
   {
+    "id": "cocaine",
+    "path": "assets/music/cocaine.mp3",
+    "title": "Cocaine",
+    "artist": "Eric Clapton"
+  },
+  {
+    "id": "hallelujah",
+    "path": "assets/music/hallelujah.mp3",
+    "title": "Hallelujah",
+    "artist": "Jeff Buckley"
+  },
+  {
     "id": "artillery",
     "path": "assets/music/artillery.mp3",
     "title": "Artillery",
@@ -41,7 +47,30 @@
     "title": "My Sweet Lord",
     "artist": "George Harrison"
   },
-
+  {
+    "id": "hooked-on-a-feeling",
+    "path": "assets/music/hooked-on-a-feeling.mp3",
+    "title": "Hooked on a Feeling",
+    "artist": "Blue Swede"
+  },
+  {
+    "id": "lie",
+    "path": "assets/music/lie.mp3",
+    "title": "Love the Way You Lie",
+    "artist": "Eminem feat. Rihanna"
+  },
+  {
+    "id": "no-woman-no-cry",
+    "path": "assets/music/no-woman-no-cry.mp3",
+    "title": "No Woman No Cry",
+    "artist": "Bob Marley"
+  },
+  {
+    "id": "madness",
+    "path": "assets/music/madness.mp3",
+    "title": "Madness",
+    "artist": "Muse"
+  },
   {
     "id": "jungle-boogie",
     "path": "assets/music/jungle-boogie.mp3",
@@ -65,6 +94,18 @@
     "path": "assets/music/dancing-with-kadafi.mp3",
     "title": "Dancing With Kadafi",
     "artist": "Infected Mushroom"
+  },
+  {
+    "id": "bohemian-rhapsody",
+    "path": "assets/music/bohemian-rhapsody.mp3",
+    "title": "Bohemian Rhapsody",
+    "artist": "Queen"
+  },
+  {
+    "id": "hotel-california",
+    "path": "assets/music/hotel-california.mp3",
+    "title": "Hotel California",
+    "artist": "Eagles"
   },
   {
     "id": "brothers",
