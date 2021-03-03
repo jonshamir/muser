@@ -1,4 +1,4 @@
-# muser
+# Muser
 
 Muser is a “smart” music visualizer, made by [Jon Shamir](https://jonshamir.com). It is an experiment to test how maching learning technology can be used to enhance music visualization.
 
@@ -17,6 +17,7 @@ The final visualization colors are based on the 5 most-fitting genres. The visua
 The idea for muser and the visualization itself is inspired by Wassily Kandinsky (1866-1944). Generally credited as the pioneer of abstract art, his work is well-known for its musical inspirations. Kandinsky associated specific tones and instruments to shapes and colors, thus “visualizing” a musical composition.
 
 <i>Circles in a Circle</i> by Wassily Kandinsky, 1923
+
 <img src="https://jonshamir.github.io/muser/assets/images/kandinsky.jpg" width="300">
 
 Colors for each genre were chosen according to the [Musicmap](https://musicmap.info/) project so that music genres which are stylistically closer will get similar colors.
