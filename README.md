@@ -14,7 +14,7 @@ The final visualization colors are based on the 5 most-fitting genres. The visua
 
 The idea for muser and the visualization itself is inspired by Wassily Kandinsky (1866-1944). Generally credited as the pioneer of abstract art, his work is well-known for its musical inspirations. Kandinsky associated specific tones and instruments to shapes and colors, thus “visualizing” a musical composition.
 
-![Circles by Kandinsky](https://jonshamir.github.io/muser/assets/images/kandinsky.jpg | width=200)
+<img src="https://jonshamir.github.io/muser/assets/images/kandinsky.jpg" width="200" />
 _Circles in a Circle_ by Wassily Kandinsky, 1923
 
 Colors for each genre were chosen according to the [Musicmap](https://musicmap.info/) project so that music genres which are stylistically closer will get similar colors.
