@@ -8,7 +8,7 @@ You can see it live here: [jonshamir.github.io/muser/](https://jonshamir.github.
 
 A neural network - musicnn - predicts the musical genre for each second of a song. The predictions are then used to generate a color scheme:
 
-<img src="https://jonshamir.github.io/muser/assets/images/chart.png">
+![proccess](https://raw.githubusercontent.com/jonshamir/muser/master/app/assets/images/chart.png?raw=true)
 
 The final visualization colors are based on the 5 most-fitting genres. The visualization shapes move and react to the audio data, like any classic music visualizer.
 
