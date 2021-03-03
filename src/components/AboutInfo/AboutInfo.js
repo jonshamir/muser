@@ -90,16 +90,16 @@ const AboutInfo = ({ onClose, exampleIndex, ...props }) => {
         <p>
           Colors for each genre were chosen according to the{" "}
           <a href="https://musicmap.info/" target="_blank">
-            Musicmap project
+            Musicmap
           </a>{" "}
-          so that music genres which are stylistically closer will get similar
-          colors.
+          project so that music genres which are stylistically closer will get
+          similar colors.
         </p>
         <p>
           The project structure is based on{" "}
           <a href="https://github.com/mattdesl/threejs-app" target="_blank">
             threejs-app
-          </a>{" "}
+          </a>
           .
         </p>
       </div>
