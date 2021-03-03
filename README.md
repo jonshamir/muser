@@ -6,7 +6,7 @@ You can see it live here: [jonshamir.github.io/muser/](https://jonshamir.github.
 
 ## How does it work?
 
-A neural network - musicnn - predicts the musical genre for each second of a song. The predictions are then used to generate a color scheme:
+A neural network - [musicnn](https://github.com/jordipons/musicnn) - predicts the musical genre for each second of a song. The predictions are then used to generate a color scheme:
 
 ![proccess](https://raw.githubusercontent.com/jonshamir/muser/master/app/assets/images/chart.png?raw=true)
 
