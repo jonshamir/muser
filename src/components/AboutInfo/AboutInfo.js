@@ -14,18 +14,26 @@ const AboutInfo = ({ onClose, exampleIndex, ...props }) => {
       <div className="text-content">
         <h2>What is this?</h2>
         <p>
-          <strong>Muser</strong> is a “smart” music visualizer, made by{" "}
+          <strong>Muser</strong> is a “smart” music visualizer. It is an
+          experiment to see how maching learning technology can be used to
+          enhance music visualization.
+        </p>
+        <p>
+          Made by{" "}
           <a href="https://jonshamir.com" target="_blank">
             Jon Shamir
           </a>
-          . It is an experiment to test how maching learning technology can be
-          used to enhance music visualization.
+          , the source code is available on{" "}
+          <a href="https://github.com/jonshamir/muser" target="_blank">
+            GitHub
+          </a>
+          .
         </p>
         <p>
           Select a track using the <i className="material-icons">queue_music</i>
           dropdown on the top left, then click the{" "}
-          <i className="material-icons">play_arrow</i>play button. Currently
-          only a few pre-analyzed tracks are available.
+          <i className="material-icons">play_arrow</i>play button. Note that
+          only a few pre-analyzed tracks are available currently.
         </p>
         <h2>How does it work?</h2>
         <p>
@@ -66,6 +74,8 @@ const AboutInfo = ({ onClose, exampleIndex, ...props }) => {
         <p>
           To see the genre tags for the currently playing song, click the{" "}
           <i className="material-icons">insert_chart_outlined</i> graph icon.
+          All generated colors for the currently selected song are visualized on
+          the timeline, revealing stylistic changes within a track.
         </p>
         <h2>About</h2>
         <p>
