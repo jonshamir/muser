@@ -13,6 +13,7 @@ const GenreGraph = require("../../components/GenreGraph/GenreGraph");
 const SeekBar = require("../../components/SeekBar/SeekBar");
 const TrackSelector = require("../../components/TrackSelector/TrackSelector");
 const AboutInfo = require("../../components/AboutInfo/AboutInfo");
+const JonLogo = require("../../components/JonLogo/JonLogo");
 
 const formatTime = (seconds) => {
   if (seconds < 0) seconds = 0;
@@ -182,18 +183,20 @@ class MuserUI extends BaseComponent {
           this.container = c;
         }}
       >
-        <div className="playlist">
+        <div className="top-bar">
+          <div className="help">
+            <IconButton onClick={this.handleToggleAbout}>
+              <i className="material-icons">info</i>
+            </IconButton>
+          </div>
           <TrackSelector
             value={this.state.currentTrackId}
             tracks={player.playlist}
             onChange={(trackId) => this.setTrack(trackId)}
           />
+          <JonLogo />
         </div>
-        <div className="help">
-          <IconButton onClick={this.handleToggleAbout}>
-            <i className="material-icons">info</i>
-          </IconButton>
-        </div>
+
         <div className={loaderClasses}>
           <Spinner />
           <h3>Loading track data...</h3>

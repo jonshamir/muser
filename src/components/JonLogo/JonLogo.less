@@ -1,0 +1,210 @@
+.JonLogo {
+  .interactive;
+  .noselect;
+  color: white;
+  width: 3em;
+  height: 3em;
+  z-index: 11;
+  margin-left: auto;
+  display: block;
+  box-sizing: border-box;
+  border-radius: 500px;
+  cursor: pointer;
+  transition: all 0.5s @easeOutCubic;
+  background: rgba(25, 25, 25, 0.85);
+
+  // &:hover {
+  //   transition: all 0.25s @easeOutCubic;
+  //   background: rgba(100, 100, 100, 1);
+  // }
+  // &:active {
+  //   transition: all 0.1s @easeOutCubic;
+  //   background: rgba(125, 125, 125, 1);
+  // }
+}
+
+// ========== 3D logo css ==========
+.logo-container {
+  height: 100%;
+  width: 100%;
+  perspective: 5000px;
+  transform: scale(0.25);
+}
+.logo-container * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+}
+.JonLogo:hover .rotate {
+  transform: rotateY(325deg);
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+.logo {
+  transform: rotateZ(45deg);
+}
+
+.rotate {
+  animation: rotate 1s ease-out;
+  transition: transform 500ms ease;
+}
+
+.top {
+  transform: rotateZ(90deg) translate(-40px, 20px);
+}
+.top .face {
+  position: absolute;
+  margin: -24px -10px;
+  width: 20px;
+  height: 48px;
+}
+.top .face:nth-child(n + 5) {
+  margin-top: -10px;
+  height: 20px;
+}
+.top .face:nth-child(1) {
+  transform: rotateY(0deg) translateZ(10px);
+  background: #ddd;
+}
+.top .face:nth-child(2) {
+  transform: rotateY(90deg) translateZ(10px);
+  background: #bbb;
+}
+.top .face:nth-child(3) {
+  transform: rotateY(180deg) translateZ(10px);
+  background: #ddd;
+}
+.top .face:nth-child(4) {
+  transform: rotateY(270deg) translateZ(10px);
+  background: #fff;
+}
+.top .face:nth-child(5) {
+  transform: rotateX(90deg) translateZ(24px);
+  background: #bbb;
+}
+.top .face:nth-child(6) {
+  transform: rotateX(-90deg) translateZ(24px);
+  background: #fff;
+}
+
+.bottom {
+  transform: rotateZ(90deg) translate3d(40px, -20px, 0);
+}
+.bottom .face {
+  position: absolute;
+  margin: -24px -10px;
+  width: 20px;
+  height: 48px;
+}
+.bottom .face:nth-child(n + 5) {
+  margin-top: -10px;
+  height: 20px;
+}
+.bottom .face:nth-child(1) {
+  transform: rotateY(0deg) translateZ(10px);
+  background: #ddd;
+}
+.bottom .face:nth-child(2) {
+  transform: rotateY(90deg) translateZ(10px);
+  background: #bbb;
+}
+.bottom .face:nth-child(3) {
+  transform: rotateY(180deg) translateZ(10px);
+  background: #ddd;
+}
+.bottom .face:nth-child(4) {
+  transform: rotateY(270deg) translateZ(10px);
+  background: #fff;
+}
+.bottom .face:nth-child(5) {
+  transform: rotateX(90deg) translateZ(24px);
+  background: #bbb;
+}
+.bottom .face:nth-child(6) {
+  transform: rotateX(-90deg) translateZ(24px);
+  background: #fff;
+}
+
+.middle {
+  transform: rotateZ(90deg);
+}
+.middle .face {
+  position: absolute;
+  margin: -44px -10px;
+  width: 20px;
+  height: 88px;
+}
+.middle .face:nth-child(n + 5) {
+  margin-top: -10px;
+  height: 20px;
+}
+.middle .face:nth-child(1) {
+  transform: rotateY(0deg) translateZ(10px);
+  background: #ddd;
+}
+.middle .face:nth-child(2) {
+  transform: rotateY(90deg) translateZ(10px);
+  background: #bbb;
+}
+.middle .face:nth-child(3) {
+  transform: rotateY(180deg) translateZ(10px);
+  background: #ddd;
+}
+.middle .face:nth-child(4) {
+  transform: rotateY(270deg) translateZ(10px);
+  background: #fff;
+}
+.middle .face:nth-child(5) {
+  transform: rotateX(90deg) translateZ(44px);
+  background: #bbb;
+}
+.middle .face:nth-child(6) {
+  transform: rotateX(-90deg) translateZ(44px);
+  background: #fff;
+}
+
+.side {
+  transform: translate3d(34px, 20px, 0);
+}
+.side .face {
+  position: absolute;
+  margin: -12px -10px;
+  width: 20px;
+  height: 24px;
+}
+.side .face:nth-child(n + 5) {
+  margin-top: -10px;
+  height: 20px;
+}
+.side .face:nth-child(1) {
+  transform: rotateY(0deg) translateZ(10px);
+  background: #ddd;
+}
+.side .face:nth-child(2) {
+  transform: rotateY(90deg) translateZ(10px);
+  background: #bbb;
+}
+.side .face:nth-child(3) {
+  transform: rotateY(180deg) translateZ(10px);
+  background: #ddd;
+}
+.side .face:nth-child(4) {
+  transform: rotateY(270deg) translateZ(10px);
+  background: #fff;
+}
+.side .face:nth-child(5) {
+  transform: rotateX(90deg) translateZ(12px);
+  background: #bbb;
+}
+.side .face:nth-child(6) {
+  transform: rotateX(-90deg) translateZ(12px);
+  background: #fff;
+}
