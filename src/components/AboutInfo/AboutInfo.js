@@ -15,7 +15,7 @@ const AboutInfo = ({ onClose, exampleIndex, ...props }) => {
         <h2>What is this?</h2>
         <p>
           <strong>Muser</strong> is a “smart” music visualizer. It is an
-          experiment to see how maching learning technology can be used to
+          experiment to see how machine learning technology can be used to
           enhance music visualization.
         </p>
         <p>
@@ -68,7 +68,7 @@ const AboutInfo = ({ onClose, exampleIndex, ...props }) => {
         </div>
         <p>
           The final visualization colors are based on the 5 most-fitting genres.
-          The visualization shapes move and react to the audio data, like any
+          The visualization shapes move and react to the audio data, like a
           classic music visualizer.
         </p>
         <p>
