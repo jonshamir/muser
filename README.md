@@ -2,7 +2,7 @@
 
 [![preview](https://raw.githubusercontent.com/jonshamir/muser/master/app/assets/images/preview.png?raw=true)](https://jonshamir.github.io/muser/)
 
-Muser is a “smart” music visualizer, made by [Jon Shamir](https://jonshamir.com). It is an experiment to test how maching learning technology can be used to enhance music visualization.
+Muser is a “smart” music visualizer, made by [Jon Shamir](https://jonshamir.com). It is an experiment to test how machine learning technology can be used to enhance music visualization.
 
 You can see it live here: [jonshamir.github.io/muser/](https://jonshamir.github.io/muser/).
 
